@@ -31,6 +31,15 @@ export const recipeService = {
     })
   },
 
+  async updateRecipe(id: string, data: RecipeFormData) {
+    const payload = toCreateRecipePayload(data)
+    return apiFetch<Recipe>(`${API_URL}/recipes/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    })
+  },
+
   async deleteRecipe(id: string) {
     return apiFetch(`${API_URL}/recipes/${id}`, {
       method: "DELETE"

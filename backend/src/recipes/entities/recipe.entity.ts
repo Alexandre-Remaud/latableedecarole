@@ -1,72 +1,72 @@
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { HydratedDocument } from "mongoose";
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose"
+import { HydratedDocument } from "mongoose"
 
-export type RecipeDocument = HydratedDocument<Recipe>;
+export type RecipeDocument = HydratedDocument<Recipe>
 
 @Schema({ _id: false })
 class Step {
   @Prop({ required: true })
-  order: number;
+  order: number
 
   @Prop({ required: true })
-  instruction: string;
+  instruction: string
 
   @Prop()
-  duration?: number;
+  duration?: number
 
   @Prop()
-  durationUnit?: "min" | "sec";
+  durationUnit?: "min" | "sec"
 
   @Prop()
-  temperature?: number;
+  temperature?: number
 
   @Prop()
-  temperatureUnit?: "C" | "F";
+  temperatureUnit?: "C" | "F"
 
   @Prop()
-  note?: string;
+  note?: string
 }
 
 @Schema({ _id: false })
 class Ingredient {
   @Prop({ required: true })
-  name: string;
+  name: string
 
   @Prop({ required: true })
-  quantity: number;
+  quantity: number
 
   @Prop({ required: true })
-  unit: string;
+  unit: string
 }
 
 @Schema({ timestamps: true })
 export class Recipe {
   @Prop({ required: true })
-  title: string;
+  title: string
 
   @Prop({ required: true })
-  description: string;
+  description: string
 
   @Prop({ type: [Ingredient], required: true })
-  ingredients: Ingredient[];
+  ingredients: Ingredient[]
 
   @Prop({ type: [Step], required: true })
-  steps: Step[];
+  steps: Step[]
 
   @Prop()
-  imageUrl?: string;
+  imageUrl?: string
 
   @Prop({ default: 0 })
-  prepTime?: number;
+  prepTime?: number
 
   @Prop({ default: 0 })
-  cookTime?: number;
+  cookTime?: number
 
   @Prop({ default: 4 })
-  servings?: number;
+  servings?: number
 
   @Prop({ type: String, enum: ["easy", "medium", "hard"] })
-  difficulty?: string;
+  difficulty?: string
 
   @Prop({
     type: String,
@@ -81,15 +81,15 @@ export class Recipe {
       "sauce"
     ]
   })
-  category?: string;
+  category?: string
 }
 
-export const RecipeSchema = SchemaFactory.createForClass(Recipe);
+export const RecipeSchema = SchemaFactory.createForClass(Recipe)
 
 RecipeSchema.pre<RecipeDocument>("save", function () {
   if (this.steps && this.steps.length > 0) {
     this.cookTime = this.steps.reduce((total, step) => {
-      return total + (step.duration ?? 0);
-    }, 0);
+      return total + (step.duration ?? 0)
+    }, 0)
   }
-});
+})

@@ -83,7 +83,9 @@ describe("RecipesService", () => {
 
       const result = await service.findAll("dessert")
 
-      expect(mockRecipeModel.find).toHaveBeenCalledWith({ category: "dessert" })
+      expect(mockRecipeModel.find).toHaveBeenCalledWith({
+        category: "dessert"
+      })
       expect(result).toEqual(recipes)
     })
 
@@ -94,7 +96,9 @@ describe("RecipesService", () => {
 
       const result = await service.findAll("beverage")
 
-      expect(mockRecipeModel.find).toHaveBeenCalledWith({ category: "beverage" })
+      expect(mockRecipeModel.find).toHaveBeenCalledWith({
+        category: "beverage"
+      })
       expect(result).toEqual([])
     })
   })
@@ -116,9 +120,7 @@ describe("RecipesService", () => {
         exec: jest.fn().mockResolvedValue(null)
       })
 
-      await expect(service.findOne(VALID_ID)).rejects.toThrow(
-        NotFoundException
-      )
+      await expect(service.findOne(VALID_ID)).rejects.toThrow(NotFoundException)
     })
 
     it("should throw BadRequestException if id is invalid", async () => {
@@ -151,9 +153,9 @@ describe("RecipesService", () => {
         exec: jest.fn().mockResolvedValue(null)
       })
 
-      await expect(
-        service.update(VALID_ID, { title: "Test" })
-      ).rejects.toThrow(NotFoundException)
+      await expect(service.update(VALID_ID, { title: "Test" })).rejects.toThrow(
+        NotFoundException
+      )
     })
 
     it("should throw BadRequestException if id is invalid", async () => {
@@ -180,9 +182,7 @@ describe("RecipesService", () => {
         exec: jest.fn().mockResolvedValue(null)
       })
 
-      await expect(service.remove(VALID_ID)).rejects.toThrow(
-        NotFoundException
-      )
+      await expect(service.remove(VALID_ID)).rejects.toThrow(NotFoundException)
     })
 
     it("should throw BadRequestException if id is invalid", async () => {

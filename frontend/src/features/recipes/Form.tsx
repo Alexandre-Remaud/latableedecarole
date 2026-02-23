@@ -3,23 +3,37 @@ import StepField from "./StepField"
 import { CATEGORIES } from "@recipes/constants/categories"
 import { useRecipeForm } from "@recipes/hooks/useForm"
 
-export default function Form() {
-  const { form, ingredients, steps, onSubmit, addIngredient, addStep } =
-    useRecipeForm()
+interface FormProps {
+  recipeId?: string
+}
+
+export default function Form({ recipeId }: FormProps) {
+  const { form, ingredients, steps, onSubmit, isLoading, isEditMode, addIngredient, addStep } =
+    useRecipeForm(recipeId)
   const {
     register,
     control,
     formState: { errors, isSubmitting }
   } = form
 
+  if (isLoading) {
+    return (
+      <div className="max-w-3xl mx-auto text-center py-12 text-gray-500">
+        Chargement de la recette...
+      </div>
+    )
+  }
+
   return (
     <div className="max-w-3xl mx-auto">
       <div className="mb-8">
         <h2 className="font-display text-3xl font-bold text-gray-800">
-          Nouvelle recette
+          {isEditMode ? "Modifier la recette" : "Nouvelle recette"}
         </h2>
         <p className="text-gray-500 mt-1">
-          Remplissez les informations ci-dessous pour ajouter votre recette.
+          {isEditMode
+            ? "Modifiez les informations ci-dessous pour mettre à jour votre recette."
+            : "Remplissez les informations ci-dessous pour ajouter votre recette."}
         </p>
       </div>
 
@@ -228,7 +242,11 @@ export default function Form() {
           disabled={isSubmitting}
           className="w-full py-4 bg-warm-600 text-white rounded-2xl hover:bg-warm-700 active:bg-warm-800 transition-colors font-semibold text-lg shadow-sm disabled:bg-gray-300 disabled:cursor-not-allowed"
         >
-          {isSubmitting ? "Enregistrement..." : "Enregistrer la recette"}
+          {isSubmitting
+            ? "Enregistrement..."
+            : isEditMode
+              ? "Enregistrer les modifications"
+              : "Enregistrer la recette"}
         </button>
       </form>
     </div>

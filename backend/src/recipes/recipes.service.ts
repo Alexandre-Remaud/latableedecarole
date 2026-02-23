@@ -11,9 +11,7 @@ import { Recipe } from "./entities/recipe.entity"
 
 @Injectable()
 export class RecipesService {
-  constructor(
-    @InjectModel(Recipe.name) private recipeModel: Model<Recipe>
-  ) {}
+  constructor(@InjectModel(Recipe.name) private recipeModel: Model<Recipe>) {}
 
   private validateObjectId(id: string): void {
     if (!isValidObjectId(id)) {

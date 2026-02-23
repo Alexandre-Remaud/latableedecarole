@@ -7,10 +7,10 @@ import {
   Param,
   Delete,
   Query
-} from "@nestjs/common";
-import { RecipesService } from "./recipes.service";
-import { CreateRecipeDto } from "./dto/create-recipe.dto";
-import { UpdateRecipeDto } from "./dto/update-recipe.dto";
+} from "@nestjs/common"
+import { RecipesService } from "./recipes.service"
+import { CreateRecipeDto } from "./dto/create-recipe.dto"
+import { UpdateRecipeDto } from "./dto/update-recipe.dto"
 
 @Controller("recipes")
 export class RecipesController {
@@ -18,26 +18,26 @@ export class RecipesController {
 
   @Post()
   create(@Body() createRecipeDto: CreateRecipeDto) {
-    return this.recipesService.create(createRecipeDto);
+    return this.recipesService.create(createRecipeDto)
   }
 
   @Get()
   findAll(@Query("category") category?: string) {
-    return this.recipesService.findAll(category);
+    return this.recipesService.findAll(category)
   }
 
   @Get(":id")
   findOne(@Param("id") id: string) {
-    return this.recipesService.findOne(id);
+    return this.recipesService.findOne(id)
   }
 
   @Patch(":id")
   update(@Param("id") id: string, @Body() updateRecipeDto: UpdateRecipeDto) {
-    return this.recipesService.update(id, updateRecipeDto);
+    return this.recipesService.update(id, updateRecipeDto)
   }
 
   @Delete(":id")
   remove(@Param("id") id: string) {
-    return this.recipesService.remove(id);
+    return this.recipesService.remove(id)
   }
 }
