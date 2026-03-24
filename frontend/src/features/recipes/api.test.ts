@@ -54,7 +54,7 @@ describe("recipeService.getRecipes", () => {
       new Response(JSON.stringify(mockPaginated), { status: 200 })
     )
 
-    await recipeService.getRecipes(undefined, 20)
+    await recipeService.getRecipes(undefined, undefined, 20)
 
     const [url] = (fetch as ReturnType<typeof vi.fn>).mock.calls[0]
     expect(url).toContain("skip=20")
@@ -66,7 +66,7 @@ describe("recipeService.getRecipes", () => {
       new Response(JSON.stringify(mockPaginated), { status: 200 })
     )
 
-    await recipeService.getRecipes("dessert", 40)
+    await recipeService.getRecipes("dessert", undefined, 40)
 
     const [url] = (fetch as ReturnType<typeof vi.fn>).mock.calls[0]
     expect(url).toContain("category=dessert")
@@ -79,7 +79,7 @@ describe("recipeService.getRecipes", () => {
       new Response(JSON.stringify(mockPaginated), { status: 200 })
     )
 
-    await recipeService.getRecipes(undefined, 0, 10)
+    await recipeService.getRecipes(undefined, undefined, 0, 10)
 
     const [url] = (fetch as ReturnType<typeof vi.fn>).mock.calls[0]
     expect(url).toContain("limit=10")
