@@ -65,7 +65,7 @@ describe("RecipesController", () => {
 
       const result = await controller.findAll()
 
-      expect(mockRecipesService.findAll).toHaveBeenCalledWith(undefined, 0, 20)
+      expect(mockRecipesService.findAll).toHaveBeenCalledWith(undefined, undefined, 0, 20)
       expect(result).toEqual(paginatedResult)
     })
 
@@ -74,23 +74,31 @@ describe("RecipesController", () => {
 
       await controller.findAll("dessert")
 
-      expect(mockRecipesService.findAll).toHaveBeenCalledWith("dessert", 0, 20)
+      expect(mockRecipesService.findAll).toHaveBeenCalledWith("dessert", undefined, 0, 20)
+    })
+
+    it("should call service.findAll with search", async () => {
+      mockRecipesService.findAll.mockResolvedValue(paginatedResult)
+
+      await controller.findAll(undefined, "tarte")
+
+      expect(mockRecipesService.findAll).toHaveBeenCalledWith(undefined, "tarte", 0, 20)
     })
 
     it("should parse skip and limit query params", async () => {
       mockRecipesService.findAll.mockResolvedValue(paginatedResult)
 
-      await controller.findAll(undefined, "20", "10")
+      await controller.findAll(undefined, undefined, "20", "10")
 
-      expect(mockRecipesService.findAll).toHaveBeenCalledWith(undefined, 20, 10)
+      expect(mockRecipesService.findAll).toHaveBeenCalledWith(undefined, undefined, 20, 10)
     })
 
     it("should combine category, skip and limit", async () => {
       mockRecipesService.findAll.mockResolvedValue(paginatedResult)
 
-      await controller.findAll("starter", "40", "20")
+      await controller.findAll("starter", undefined, "40", "20")
 
-      expect(mockRecipesService.findAll).toHaveBeenCalledWith("starter", 40, 20)
+      expect(mockRecipesService.findAll).toHaveBeenCalledWith("starter", undefined, 40, 20)
     })
   })
 

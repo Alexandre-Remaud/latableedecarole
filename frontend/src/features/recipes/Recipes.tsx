@@ -10,13 +10,14 @@ import { Route } from "@/routes/recipes/index"
 
 const LIMIT = 20
 
-function getPageTitle(category?: string) {
+function getPageTitle(category?: string, search?: string) {
+  if (search) return `Résultats pour "${search}"`
   if (!category) return "Recettes"
   return CATEGORIES.find((c) => c.value === category)?.label ?? "Recettes"
 }
 
 export default function Recipes() {
-  const { category } = Route.useSearch()
+  const { category, search } = Route.useSearch()
   const [recipes, setRecipes] = useState<Recipe[]>([])
   const [total, setTotal] = useState(0)
   const [skip, setSkip] = useState(0)
@@ -31,7 +32,7 @@ export default function Recipes() {
     setSkip(0)
     setTotal(0)
     recipeService
-      .getRecipes(category, 0)
+      .getRecipes(category, search, 0)
       .then(({ data, total }) => {
         setRecipes(data)
         setTotal(total)
@@ -39,13 +40,14 @@ export default function Recipes() {
       })
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false))
-  }, [category])
+  }, [category, search])
 
   async function handleLoadMore() {
     setLoadingMore(true)
     try {
       const { data, total: newTotal } = await recipeService.getRecipes(
         category,
+        search,
         skip
       )
       setRecipes((prev) => [...prev, ...data])
@@ -79,7 +81,7 @@ export default function Recipes() {
 
   if (loading) {
     return (
-      <div className="max-w-3xl mx-auto text-center py-12 text-gray-500">
+      <div className="max-w-5xl mx-auto text-center py-12 text-gray-500">
         Chargement des recettes...
       </div>
     )
@@ -87,7 +89,7 @@ export default function Recipes() {
 
   if (error) {
     return (
-      <div className="max-w-3xl mx-auto text-center py-12 text-red-500">
+      <div className="max-w-5xl mx-auto text-center py-12 text-red-500">
         {error}
       </div>
     )
@@ -95,14 +97,20 @@ export default function Recipes() {
 
   if (recipes.length === 0) {
     return (
-      <div className="max-w-3xl mx-auto text-center py-12">
-        <p className="text-gray-500 mb-4">Aucune recette pour le moment.</p>
-        <Link
-          to="/recipes/add"
-          className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-white bg-warm-600 rounded-xl hover:bg-warm-700 transition-colors"
-        >
-          Ajouter une recette
-        </Link>
+      <div className="max-w-5xl mx-auto text-center py-12">
+        <p className="text-gray-500 mb-4">
+          {search
+            ? `Aucune recette trouvée pour "${search}".`
+            : "Aucune recette pour le moment."}
+        </p>
+        {!search && (
+          <Link
+            to="/recipes/add"
+            className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-white bg-warm-600 rounded-xl hover:bg-warm-700 transition-colors"
+          >
+            Ajouter une recette
+          </Link>
+        )}
       </div>
     )
   }
@@ -110,9 +118,9 @@ export default function Recipes() {
   const hasMore = recipes.length < total
 
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="max-w-5xl mx-auto">
       <h1 className="font-display text-2xl font-bold text-gray-800 mb-6">
-        {getPageTitle(category)}
+        {getPageTitle(category, search)}
       </h1>
 
       <ul className="grid gap-4">

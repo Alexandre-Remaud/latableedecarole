@@ -17,7 +17,7 @@ export default function Home() {
 
   useEffect(() => {
     recipeService
-      .getRecipes(undefined, 0, HOME_LIMIT)
+      .getRecipes(undefined, undefined, 0, HOME_LIMIT)
       .then(({ data, total }) => {
         setTotal(total)
         setRecipes(data)
@@ -44,7 +44,7 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div className="max-w-3xl mx-auto text-center py-12 text-gray-500">
+      <div className="max-w-5xl mx-auto text-center py-12 text-gray-500">
         Chargement des recettes...
       </div>
     )
@@ -52,14 +52,14 @@ export default function Home() {
 
   if (error) {
     return (
-      <div className="max-w-3xl mx-auto text-center py-12 text-red-500">
+      <div className="max-w-5xl mx-auto text-center py-12 text-red-500">
         {error}
       </div>
     )
   }
 
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="max-w-5xl mx-auto">
       <div className="text-center py-10 mb-6">
         <h1 className="font-display text-4xl font-bold text-gray-800 mb-2">
           Bienvenue chez Carole

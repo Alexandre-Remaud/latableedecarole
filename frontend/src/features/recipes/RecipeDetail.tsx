@@ -38,7 +38,7 @@ export default function RecipeDetail() {
 
   if (loading) {
     return (
-      <div className="max-w-3xl mx-auto text-center py-12 text-gray-500">
+      <div className="max-w-5xl mx-auto text-center py-12 text-gray-500">
         Chargement de la recette...
       </div>
     )
@@ -46,7 +46,7 @@ export default function RecipeDetail() {
 
   if (error) {
     return (
-      <div className="max-w-3xl mx-auto text-center py-12 text-red-500">
+      <div className="max-w-5xl mx-auto text-center py-12 text-red-500">
         {error}
       </div>
     )
@@ -57,7 +57,7 @@ export default function RecipeDetail() {
   const sortedSteps = [...recipe.steps].sort((a, b) => a.order - b.order)
 
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="max-w-5xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <Link
           to="/recipes"

@@ -24,11 +24,13 @@ export class RecipesController {
   @Get()
   findAll(
     @Query("category") category?: string,
+    @Query("search") search?: string,
     @Query("skip") skip?: string,
     @Query("limit") limit?: string
   ) {
     return this.recipesService.findAll(
       category,
+      search,
       skip ? parseInt(skip, 10) : 0,
       limit ? parseInt(limit, 10) : 20
     )

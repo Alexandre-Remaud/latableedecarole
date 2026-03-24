@@ -1,5 +1,5 @@
-import { useState, useRef, useEffect } from "react"
-import { Link, Outlet } from "@tanstack/react-router"
+import { useState, useRef, useEffect, type FormEvent } from "react"
+import { Link, Outlet, useNavigate } from "@tanstack/react-router"
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools"
 
 const MORE_CATEGORIES = [
@@ -12,7 +12,9 @@ const MORE_CATEGORIES = [
 
 export default function Layout() {
   const [moreOpen, setMoreOpen] = useState(false)
+  const [searchValue, setSearchValue] = useState("")
   const moreRef = useRef<HTMLDivElement>(null)
+  const navigate = useNavigate()
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -24,12 +26,20 @@ export default function Layout() {
     return () => document.removeEventListener("mousedown", handleClickOutside)
   }, [])
 
+  function handleSearch(e: FormEvent) {
+    e.preventDefault()
+    void navigate({
+      to: "/recipes",
+      search: searchValue.trim() ? { search: searchValue.trim() } : {}
+    })
+  }
+
   return (
     <>
       <div className="min-h-screen flex flex-col">
         <header className="bg-white border-b border-gray-100">
-          <div className="max-w-3xl mx-auto px-6 py-5 flex items-center justify-between">
-            <div className="flex items-center gap-6">
+          <div className="max-w-5xl mx-auto px-6 py-5 flex items-center justify-between gap-4">
+            <div className="flex items-center gap-6 shrink-0">
               <Link
                 to="/"
                 className="flex items-center gap-3 hover:opacity-80 transition-opacity"
@@ -119,9 +129,38 @@ export default function Layout() {
               </nav>
             </div>
 
+            <form
+              onSubmit={handleSearch}
+              className="flex-1 max-w-sm"
+            >
+              <div className="relative">
+                <svg
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <circle cx="11" cy="11" r="8" />
+                  <path d="m21 21-4.3-4.3" />
+                </svg>
+                <input
+                  type="search"
+                  value={searchValue}
+                  onChange={(e) => setSearchValue(e.target.value)}
+                  placeholder="Rechercher une recette..."
+                  className="w-full pl-9 pr-4 py-2 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-warm-300 focus:border-warm-400 transition"
+                />
+              </div>
+            </form>
+
             <Link
               to="/recipes/add"
-              className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-white bg-warm-600 rounded-xl hover:bg-warm-700 active:bg-warm-800 transition-colors"
+              className="shrink-0 inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-white bg-warm-600 rounded-xl hover:bg-warm-700 active:bg-warm-800 transition-colors"
             >
               <svg
                 width="18"

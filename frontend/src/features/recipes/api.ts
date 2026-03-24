@@ -16,9 +16,10 @@ export const recipeService = {
     })
   },
 
-  async getRecipes(category?: string, skip = 0, limit = 20) {
+  async getRecipes(category?: string, search?: string, skip = 0, limit = 20) {
     const params = new URLSearchParams()
     if (category) params.set("category", category)
+    if (search) params.set("search", search)
     params.set("skip", String(skip))
     params.set("limit", String(limit))
     return apiFetch<PaginatedRecipes>(`${API_URL}/recipes?${params}`)

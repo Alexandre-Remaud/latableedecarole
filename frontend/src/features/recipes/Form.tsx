@@ -18,14 +18,14 @@ export default function Form({ recipeId }: FormProps) {
 
   if (isLoading) {
     return (
-      <div className="max-w-3xl mx-auto text-center py-12 text-gray-500">
+      <div className="max-w-5xl mx-auto text-center py-12 text-gray-500">
         Chargement de la recette...
       </div>
     )
   }
 
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="max-w-5xl mx-auto">
       <div className="mb-8">
         <h2 className="font-display text-3xl font-bold text-gray-800">
           {isEditMode ? "Modifier la recette" : "Nouvelle recette"}
