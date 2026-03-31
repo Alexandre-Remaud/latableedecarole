@@ -69,12 +69,18 @@ describe("RecipesService", () => {
         ingredients: [{ name: "Pommes", quantity: 4, unit: "pièces" }],
         steps: [{ order: 1, instruction: "Éplucher les pommes" }]
       }
-      mockRecipeModel.create.mockResolvedValue(mockRecipe)
+      const userId = "507f1f77bcf86cd799439012"
+      const createdRecipe = { ...mockRecipe, userId }
+      mockRecipeModel.create.mockResolvedValue(createdRecipe)
 
-      const result = await service.create(dto)
+      const result = await service.create(dto, userId)
 
-      expect(mockRecipeModel.create).toHaveBeenCalledWith(dto)
-      expect(result).toEqual(mockRecipe)
+      expect(mockRecipeModel.create).toHaveBeenCalled()
+      const callArgs = mockRecipeModel.create.mock.calls[0][0]
+      expect(callArgs.title).toBe(dto.title)
+      expect(callArgs.description).toBe(dto.description)
+      expect(callArgs.userId).toBeDefined()
+      expect(result).toEqual(createdRecipe)
     })
   })
 
@@ -109,7 +115,7 @@ describe("RecipesService", () => {
       mockRecipeModel.find.mockReturnValue(mockFind([]))
       mockRecipeModel.countDocuments.mockResolvedValue(50)
 
-      await service.findAll(undefined, 20, 20)
+      await service.findAll(undefined, undefined, 20, 20)
 
       expect(mockSkipFn).toHaveBeenCalledWith(20)
       expect(mockLimitFn).toHaveBeenCalledWith(20)

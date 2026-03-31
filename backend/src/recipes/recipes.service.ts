@@ -6,8 +6,21 @@ import {
 import { CreateRecipeDto } from "./dto/create-recipe.dto"
 import { UpdateRecipeDto } from "./dto/update-recipe.dto"
 import { InjectModel } from "@nestjs/mongoose"
-import { Model, isValidObjectId } from "mongoose"
+import { Model, isValidObjectId, Types } from "mongoose"
 import { Recipe } from "./entities/recipe.entity"
+
+const ALLOWED_UPDATE_FIELDS = [
+  "title",
+  "description",
+  "ingredients",
+  "steps",
+  "imageUrl",
+  "prepTime",
+  "cookTime",
+  "servings",
+  "difficulty",
+  "category"
+]
 
 @Injectable()
 export class RecipesService {
@@ -19,14 +32,32 @@ export class RecipesService {
     }
   }
 
-  async create(createRecipeDto: CreateRecipeDto) {
-    return this.recipeModel.create(createRecipeDto)
+  private sanitizeUpdateDto(dto: UpdateRecipeDto): Partial<CreateRecipeDto> {
+    const sanitized: Partial<CreateRecipeDto> = {}
+    for (const key of ALLOWED_UPDATE_FIELDS) {
+      if (key in dto) {
+        ;(sanitized as Record<string, unknown>)[key] = (
+          dto as Record<string, unknown>
+        )[key]
+      }
+    }
+    return sanitized
+  }
+
+  async create(createRecipeDto: CreateRecipeDto, userId: string) {
+    return this.recipeModel.create({
+      ...createRecipeDto,
+      userId: new Types.ObjectId(userId)
+    })
   }
 
   async findAll(category?: string, search?: string, skip = 0, limit = 20) {
     const filter: Record<string, unknown> = {}
     if (category) filter.category = category
-    if (search) filter.title = { $regex: search, $options: "i" }
+    if (search) {
+      const escaped = search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+      filter.title = { $regex: escaped, $options: "i" }
+    }
     const [data, total] = await Promise.all([
       this.recipeModel
         .find(filter)
@@ -50,8 +81,9 @@ export class RecipesService {
 
   async update(id: string, updateRecipeDto: UpdateRecipeDto) {
     this.validateObjectId(id)
+    const sanitized = this.sanitizeUpdateDto(updateRecipeDto)
     const recipe = await this.recipeModel
-      .findByIdAndUpdate(id, updateRecipeDto, { new: true })
+      .findByIdAndUpdate(id, sanitized, { new: true })
       .exec()
     if (!recipe) {
       throw new NotFoundException("Recipe not found")

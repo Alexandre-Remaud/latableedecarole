@@ -6,21 +6,21 @@ import {
   Patch,
   Param,
   Delete,
-  Query
+  Query,
+  ForbiddenException
 } from "@nestjs/common"
 import { RecipesService } from "./recipes.service"
 import { CreateRecipeDto } from "./dto/create-recipe.dto"
 import { UpdateRecipeDto } from "./dto/update-recipe.dto"
+import { Public } from "../auth/decorators/public.decorator"
+import { CurrentUser } from "../auth/decorators/current-user.decorator"
+import { Role } from "../auth/role.enum"
 
 @Controller("recipes")
 export class RecipesController {
   constructor(private readonly recipesService: RecipesService) {}
 
-  @Post()
-  create(@Body() createRecipeDto: CreateRecipeDto) {
-    return this.recipesService.create(createRecipeDto)
-  }
-
+  @Public()
   @Get()
   findAll(
     @Query("category") category?: string,
@@ -36,18 +36,44 @@ export class RecipesController {
     )
   }
 
+  @Public()
   @Get(":id")
   findOne(@Param("id") id: string) {
     return this.recipesService.findOne(id)
   }
 
+  @Post()
+  create(
+    @Body() createRecipeDto: CreateRecipeDto,
+    @CurrentUser("sub") userId: string
+  ) {
+    return this.recipesService.create(createRecipeDto, userId)
+  }
+
   @Patch(":id")
-  update(@Param("id") id: string, @Body() updateRecipeDto: UpdateRecipeDto) {
+  async update(
+    @Param("id") id: string,
+    @Body() updateRecipeDto: UpdateRecipeDto,
+    @CurrentUser("sub") userId: string,
+    @CurrentUser("role") role: Role
+  ) {
+    const recipe = await this.recipesService.findOne(id)
+    if (recipe.userId.toString() !== userId && role !== Role.ADMIN) {
+      throw new ForbiddenException("You can only update your own recipes")
+    }
     return this.recipesService.update(id, updateRecipeDto)
   }
 
   @Delete(":id")
-  remove(@Param("id") id: string) {
+  async remove(
+    @Param("id") id: string,
+    @CurrentUser("sub") userId: string,
+    @CurrentUser("role") role: Role
+  ) {
+    const recipe = await this.recipesService.findOne(id)
+    if (recipe.userId.toString() !== userId && role !== Role.ADMIN) {
+      throw new ForbiddenException("You can only delete your own recipes")
+    }
     return this.recipesService.remove(id)
   }
 }

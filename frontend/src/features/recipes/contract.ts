@@ -21,6 +21,7 @@ export type Recipe = {
   cookTime?: number;
   difficulty?: "easy" | "medium" | "hard";
   category?: string;
+  userId?: string;
   createdAt?: string;
   updatedAt?: string;
 };

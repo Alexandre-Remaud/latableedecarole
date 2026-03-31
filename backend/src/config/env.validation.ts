@@ -7,7 +7,8 @@ const envSchema = z.object({
     .default("3000")
     .transform(Number)
     .pipe(z.number().int().min(1).max(65535)),
-  FRONTEND_URL: z.string().url().optional()
+  FRONTEND_URL: z.string().url().optional(),
+  JWT_SECRET: z.string().min(32)
 })
 
 export type EnvConfig = z.infer<typeof envSchema>

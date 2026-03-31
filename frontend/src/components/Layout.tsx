@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect, type FormEvent } from "react"
 import { Link, Outlet, useNavigate } from "@tanstack/react-router"
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools"
+import toast from "react-hot-toast"
+import { useAuth } from "@/features/auth/hooks"
 
 const MORE_CATEGORIES = [
   { value: "appetizer", label: "Apéritifs" },
@@ -12,14 +14,20 @@ const MORE_CATEGORIES = [
 
 export default function Layout() {
   const [moreOpen, setMoreOpen] = useState(false)
+  const [userMenuOpen, setUserMenuOpen] = useState(false)
   const [searchValue, setSearchValue] = useState("")
   const moreRef = useRef<HTMLDivElement>(null)
+  const userMenuRef = useRef<HTMLDivElement>(null)
   const navigate = useNavigate()
+  const { user, isLoading, logout } = useAuth()
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (moreRef.current && !moreRef.current.contains(e.target as Node)) {
         setMoreOpen(false)
+      }
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) {
+        setUserMenuOpen(false)
       }
     }
     document.addEventListener("mousedown", handleClickOutside)
@@ -32,6 +40,16 @@ export default function Layout() {
       to: "/recipes",
       search: searchValue.trim() ? { search: searchValue.trim() } : {}
     })
+  }
+
+  async function handleLogout() {
+    try {
+      await logout()
+      toast.success("Déconnexion réussie")
+      navigate({ to: "/" })
+    } catch {
+      toast.error("Erreur lors de la déconnexion")
+    }
   }
 
   return (
@@ -131,7 +149,7 @@ export default function Layout() {
 
             <form
               onSubmit={handleSearch}
-              className="flex-1 max-w-sm"
+              className="w-56 shrink-0"
             >
               <div className="relative">
                 <svg
@@ -152,29 +170,96 @@ export default function Layout() {
                   type="search"
                   value={searchValue}
                   onChange={(e) => setSearchValue(e.target.value)}
-                  placeholder="Rechercher une recette..."
+                  placeholder="Rechercher une recette"
                   className="w-full pl-9 pr-4 py-2 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-warm-300 focus:border-warm-400 transition"
                 />
               </div>
             </form>
 
-            <Link
-              to="/recipes/add"
-              className="shrink-0 inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-white bg-warm-600 rounded-xl hover:bg-warm-700 active:bg-warm-800 transition-colors"
-            >
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-              >
-                <path d="M12 5v14M5 12h14" />
-              </svg>
-              Ajouter une recette
-            </Link>
+            <div className="flex items-center gap-3">
+              {!isLoading && (
+                <>
+                  {user ? (
+                    <>
+                      <Link
+                        to="/recipes/add"
+                        className="shrink-0 inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-white bg-warm-600 rounded-xl hover:bg-warm-700 active:bg-warm-800 transition-colors"
+                      >
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                        >
+                          <path d="M12 5v14M5 12h14" />
+                        </svg>
+                        Ajouter une recette
+                      </Link>
+                      <div className="relative" ref={userMenuRef}>
+                        <button
+                          type="button"
+                          onClick={() => setUserMenuOpen((o) => !o)}
+                          className="shrink-0 flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 transition-colors"
+                        >
+                          <span className="w-8 h-8 flex items-center justify-center bg-warm-500 text-white rounded-full text-sm font-medium">
+                            {user.name.charAt(0).toUpperCase()}
+                          </span>
+                          <span className="max-w-[100px] truncate">{user.name}</span>
+                          <svg
+                            width="14"
+                            height="14"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className={`transition-transform ${userMenuOpen ? "rotate-180" : ""}`}
+                          >
+                            <path d="m6 9 6 6 6-6" />
+                          </svg>
+                        </button>
+                        {userMenuOpen && (
+                          <div className="absolute top-full right-0 mt-2 bg-white rounded-xl shadow-lg border border-gray-100 py-1 min-w-[180px] z-50">
+                            <div className="px-4 py-2 border-b border-gray-100">
+                              <p className="text-sm font-medium text-gray-900 truncate">
+                                {user.name}
+                              </p>
+                              <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={handleLogout}
+                              className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                            >
+                              Déconnexion
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <Link
+                        to="/login"
+                        className="shrink-0 px-4 py-2.5 text-sm font-medium text-gray-700 hover:text-warm-600 transition-colors"
+                      >
+                        Connexion
+                      </Link>
+                      <Link
+                        to="/register"
+                        className="shrink-0 inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-white bg-warm-600 rounded-xl hover:bg-warm-700 active:bg-warm-800 transition-colors"
+                      >
+                        S&apos;inscrire
+                      </Link>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
           </div>
         </header>
 

@@ -3,15 +3,18 @@ import { RecipesController } from "./recipes.controller"
 import { RecipesService } from "./recipes.service"
 import { CreateRecipeDto } from "./dto/create-recipe.dto"
 import { UpdateRecipeDto } from "./dto/update-recipe.dto"
+import { Role } from "../auth/role.enum"
 
 const VALID_ID = "507f1f77bcf86cd799439011"
+const USER_ID = "507f1f77bcf86cd799439012"
 
 const mockRecipe = {
   _id: VALID_ID,
   title: "Tarte aux pommes",
   description: "Une tarte classique",
   ingredients: [{ name: "Pommes", quantity: 4, unit: "pièces" }],
-  steps: [{ order: 1, instruction: "Éplucher les pommes" }]
+  steps: [{ order: 1, instruction: "Éplucher les pommes" }],
+  userId: USER_ID
 }
 
 const paginatedResult = { data: [mockRecipe], total: 1 }
@@ -43,7 +46,7 @@ describe("RecipesController", () => {
   })
 
   describe("create", () => {
-    it("should delegate to service.create", async () => {
+    it("should delegate to service.create with userId", async () => {
       const dto: CreateRecipeDto = {
         title: "Tarte aux pommes",
         description: "Une tarte classique",
@@ -52,9 +55,9 @@ describe("RecipesController", () => {
       }
       mockRecipesService.create.mockResolvedValue(mockRecipe)
 
-      const result = await controller.create(dto)
+      const result = await controller.create(dto, USER_ID)
 
-      expect(mockRecipesService.create).toHaveBeenCalledWith(dto)
+      expect(mockRecipesService.create).toHaveBeenCalledWith(dto, USER_ID)
       expect(result).toEqual(mockRecipe)
     })
   })
@@ -65,7 +68,12 @@ describe("RecipesController", () => {
 
       const result = await controller.findAll()
 
-      expect(mockRecipesService.findAll).toHaveBeenCalledWith(undefined, undefined, 0, 20)
+      expect(mockRecipesService.findAll).toHaveBeenCalledWith(
+        undefined,
+        undefined,
+        0,
+        20
+      )
       expect(result).toEqual(paginatedResult)
     })
 
@@ -74,7 +82,12 @@ describe("RecipesController", () => {
 
       await controller.findAll("dessert")
 
-      expect(mockRecipesService.findAll).toHaveBeenCalledWith("dessert", undefined, 0, 20)
+      expect(mockRecipesService.findAll).toHaveBeenCalledWith(
+        "dessert",
+        undefined,
+        0,
+        20
+      )
     })
 
     it("should call service.findAll with search", async () => {
@@ -82,7 +95,12 @@ describe("RecipesController", () => {
 
       await controller.findAll(undefined, "tarte")
 
-      expect(mockRecipesService.findAll).toHaveBeenCalledWith(undefined, "tarte", 0, 20)
+      expect(mockRecipesService.findAll).toHaveBeenCalledWith(
+        undefined,
+        "tarte",
+        0,
+        20
+      )
     })
 
     it("should parse skip and limit query params", async () => {
@@ -90,7 +108,12 @@ describe("RecipesController", () => {
 
       await controller.findAll(undefined, undefined, "20", "10")
 
-      expect(mockRecipesService.findAll).toHaveBeenCalledWith(undefined, undefined, 20, 10)
+      expect(mockRecipesService.findAll).toHaveBeenCalledWith(
+        undefined,
+        undefined,
+        20,
+        10
+      )
     })
 
     it("should combine category, skip and limit", async () => {
@@ -98,7 +121,12 @@ describe("RecipesController", () => {
 
       await controller.findAll("starter", undefined, "40", "20")
 
-      expect(mockRecipesService.findAll).toHaveBeenCalledWith("starter", undefined, 40, 20)
+      expect(mockRecipesService.findAll).toHaveBeenCalledWith(
+        "starter",
+        undefined,
+        40,
+        20
+      )
     })
   })
 
@@ -114,12 +142,31 @@ describe("RecipesController", () => {
   })
 
   describe("update", () => {
-    it("should delegate to service.update with the id and dto", async () => {
+    it("should delegate to service.update with the id and dto when owner", async () => {
       const dto: UpdateRecipeDto = { title: "Tarte revisitée" }
       const updated = { ...mockRecipe, ...dto }
+      mockRecipesService.findOne.mockResolvedValue(mockRecipe)
       mockRecipesService.update.mockResolvedValue(updated)
 
-      const result = await controller.update(VALID_ID, dto)
+      const result = await controller.update(VALID_ID, dto, USER_ID, Role.USER)
+
+      expect(mockRecipesService.findOne).toHaveBeenCalledWith(VALID_ID)
+      expect(mockRecipesService.update).toHaveBeenCalledWith(VALID_ID, dto)
+      expect(result).toEqual(updated)
+    })
+
+    it("should allow admin to update any recipe", async () => {
+      const dto: UpdateRecipeDto = { title: "Admin update" }
+      const updated = { ...mockRecipe, ...dto }
+      mockRecipesService.findOne.mockResolvedValue(mockRecipe)
+      mockRecipesService.update.mockResolvedValue(updated)
+
+      const result = await controller.update(
+        VALID_ID,
+        dto,
+        "other-user-id",
+        Role.ADMIN
+      )
 
       expect(mockRecipesService.update).toHaveBeenCalledWith(VALID_ID, dto)
       expect(result).toEqual(updated)
@@ -127,10 +174,26 @@ describe("RecipesController", () => {
   })
 
   describe("remove", () => {
-    it("should delegate to service.remove with the id", async () => {
+    it("should delegate to service.remove with the id when owner", async () => {
+      mockRecipesService.findOne.mockResolvedValue(mockRecipe)
       mockRecipesService.remove.mockResolvedValue(mockRecipe)
 
-      const result = await controller.remove(VALID_ID)
+      const result = await controller.remove(VALID_ID, USER_ID, Role.USER)
+
+      expect(mockRecipesService.findOne).toHaveBeenCalledWith(VALID_ID)
+      expect(mockRecipesService.remove).toHaveBeenCalledWith(VALID_ID)
+      expect(result).toEqual(mockRecipe)
+    })
+
+    it("should allow admin to delete any recipe", async () => {
+      mockRecipesService.findOne.mockResolvedValue(mockRecipe)
+      mockRecipesService.remove.mockResolvedValue(mockRecipe)
+
+      const result = await controller.remove(
+        VALID_ID,
+        "other-user-id",
+        Role.ADMIN
+      )
 
       expect(mockRecipesService.remove).toHaveBeenCalledWith(VALID_ID)
       expect(result).toEqual(mockRecipe)
