@@ -22,6 +22,11 @@ export interface JwtPayload {
   role: Role
 }
 
+export type SafeUser = Omit<
+  ReturnType<UserDocument["toObject"]>,
+  "password" | "__v"
+>
+
 export interface AuthTokens {
   accessToken: string
   refreshToken: string
@@ -87,8 +92,7 @@ export class AuthService {
     return storedToken as unknown as RefreshTokenDocument
   }
 
-  private sanitizeUser(user: UserDocument) {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  private sanitizeUser(user: UserDocument): SafeUser {
     const { password: _, __v: _2, ...rest } = user.toObject()
     return rest
   }
