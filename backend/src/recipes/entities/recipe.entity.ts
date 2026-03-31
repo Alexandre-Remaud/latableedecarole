@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose"
-import { HydratedDocument } from "mongoose"
+import { HydratedDocument, Types } from "mongoose"
 
 export type RecipeDocument = HydratedDocument<Recipe>
 
@@ -41,6 +41,8 @@ class Ingredient {
 
 @Schema({ timestamps: true })
 export class Recipe {
+  _id: Types.ObjectId
+
   @Prop({ required: true })
   title: string
 
@@ -82,6 +84,12 @@ export class Recipe {
     ]
   })
   category?: string
+
+  @Prop({ type: Types.ObjectId, ref: "User", required: true })
+  userId: Types.ObjectId
+
+  createdAt: Date
+  updatedAt: Date
 }
 
 export const RecipeSchema = SchemaFactory.createForClass(Recipe)

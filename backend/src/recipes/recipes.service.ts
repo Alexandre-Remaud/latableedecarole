@@ -6,7 +6,7 @@ import {
 import { CreateRecipeDto } from "./dto/create-recipe.dto"
 import { UpdateRecipeDto } from "./dto/update-recipe.dto"
 import { InjectModel } from "@nestjs/mongoose"
-import { Model, isValidObjectId } from "mongoose"
+import { Model, isValidObjectId, Types } from "mongoose"
 import { Recipe } from "./entities/recipe.entity"
 
 @Injectable()
@@ -19,8 +19,11 @@ export class RecipesService {
     }
   }
 
-  async create(createRecipeDto: CreateRecipeDto) {
-    return this.recipeModel.create(createRecipeDto)
+  async create(createRecipeDto: CreateRecipeDto, userId: string) {
+    return this.recipeModel.create({
+      ...createRecipeDto,
+      userId: new Types.ObjectId(userId)
+    })
   }
 
   async findAll(category?: string, search?: string, skip = 0, limit = 20) {

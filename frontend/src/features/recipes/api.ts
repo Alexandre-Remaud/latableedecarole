@@ -12,6 +12,7 @@ export const recipeService = {
     return apiFetch(`${API_URL}/recipes`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
       body: JSON.stringify(payload)
     })
   },
@@ -37,13 +38,15 @@ export const recipeService = {
     return apiFetch<Recipe>(`${API_URL}/recipes/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
       body: JSON.stringify(payload)
     })
   },
 
   async deleteRecipe(id: string) {
     return apiFetch(`${API_URL}/recipes/${id}`, {
-      method: "DELETE"
+      method: "DELETE",
+      credentials: "include"
     })
   }
 }
