@@ -115,7 +115,7 @@ describe("RecipesService", () => {
       mockRecipeModel.find.mockReturnValue(mockFind([]))
       mockRecipeModel.countDocuments.mockResolvedValue(50)
 
-      await service.findAll(undefined, 20, 20)
+      await service.findAll(undefined, undefined, 20, 20)
 
       expect(mockSkipFn).toHaveBeenCalledWith(20)
       expect(mockLimitFn).toHaveBeenCalledWith(20)
