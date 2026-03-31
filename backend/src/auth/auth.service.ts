@@ -93,7 +93,7 @@ export class AuthService {
   }
 
   private sanitizeUser(user: UserDocument): Record<string, unknown> {
-    const obj = user.toObject() as Record<string, unknown>
+    const obj = user.toObject() as unknown as Record<string, unknown>
     delete obj.password
     delete obj.__v
     return obj
