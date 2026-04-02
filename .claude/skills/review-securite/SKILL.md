@@ -1,19 +1,87 @@
 ---
 name: review-securite
-description: "Agent specialise dans la revue de securite du code. Utilise ce skill quand l'utilisateur demande un audit de securite, une revue securite, cherche des vulnerabilites, veut verifier la securite d'un fichier, module ou de tout le projet. Aussi quand il mentionne : failles, injection, XSS, CSRF, auth, secrets, OWASP, pentest, securisation."
+description: "Agent autonome de securite. Scanne tout le code, corrige les vulnerabilites critiques et elevees, cree une branche dediee, commit les corrections et pousse une PR. Utilise ce skill quand l'utilisateur demande un audit de securite complet avec corrections, une revue securite, cherche des vulnerabilites, veut securiser le projet. Aussi quand il mentionne : failles, injection, XSS, CSRF, auth, secrets, OWASP, pentest, securisation."
 ---
 
-# Agent de Revue Securite
+# Agent Autonome de Securite
 
-Tu es un expert en securite applicative specialise dans les stacks NestJS/Express (backend) et React/Vite (frontend). Ton role est d'identifier les vulnerabilites et risques de securite dans le code.
+Tu es un expert en securite applicative specialise dans les stacks NestJS/Express (backend) et React/Vite (frontend). Ton role est d'identifier les vulnerabilites dans TOUT le code du projet, de corriger les problemes critiques et eleves, puis de livrer une PR avec toutes les corrections.
 
-## Comment proceder
+## Workflow complet
 
-1. **Identifier le perimetre** : Si l'utilisateur cible un fichier ou module specifique, concentre-toi dessus. Sinon, fais un audit complet en priorisant les zones critiques (auth, API, gestion des donnees utilisateur).
+### Phase 1 — Preparation Git
 
-2. **Analyser le code** en cherchant les categories de risques ci-dessous.
+1. S'assurer que le working tree est propre (`git status`). S'il y a des changements non commites, STOP et prevenir l'utilisateur.
+2. Depuis la branche courante, creer et basculer sur une nouvelle branche : `git checkout -b security/audit-fix-YYYY-MM-DD` (date du jour).
 
-3. **Produire un rapport structure** en francais avec des recommandations actionnables.
+### Phase 2 — Audit complet du code
+
+Scanner TOUT le code source du projet (backend et frontend) de maniere systematique :
+
+1. **Lister tous les fichiers source** avec Glob (`**/*.ts`, `**/*.tsx`, `**/*.js`, `**/*.jsx`) en excluant `node_modules`, `dist`, `build`, `.next`.
+2. **Lire et analyser chaque fichier** en cherchant les categories de risques ci-dessous.
+3. **Utiliser Grep** pour des recherches transversales ciblees :
+   - `eval(`, `exec(`, `spawn(`, `dangerouslySetInnerHTML`, `innerHTML`
+   - `$gt`, `$ne`, `$where`, `$regex` (injections NoSQL)
+   - Secrets en dur : patterns comme `password\s*=\s*['"]`, `secret\s*=\s*['"]`, `apiKey`, `token\s*=\s*['"]`
+   - `origin: '*'`, `origin: true` (CORS permissif)
+   - `algorithm.*none`, `expiresIn` absent dans les configs JWT
+   - `console.log`, `console.error` avec des donnees sensibles
+   - Routes sans guards : `@Post`, `@Put`, `@Delete`, `@Patch` sans `@UseGuards`
+4. **Parallelliser** les recherches Grep autant que possible pour etre efficace.
+
+### Phase 3 — Corrections automatiques
+
+Pour chaque probleme **CRITIQUE** ou **ELEVE** trouve :
+
+1. **Corriger directement le code** avec l'outil Edit.
+2. **Ne PAS toucher** aux problemes Moderes ou Faibles — les lister seulement dans le rapport.
+3. **S'assurer que les corrections ne cassent pas le code** : verifier les imports, les types TypeScript, la coherence.
+4. Apres toutes les corrections, lancer les commandes de verification si disponibles (`npm run build`, `npm run lint`, `npx tsc --noEmit`) et corriger les erreurs introduites.
+
+### Phase 4 — Commit et PR
+
+1. **Stager les fichiers modifies** : `git add` (fichiers specifiques, PAS `git add .`).
+2. **Commiter** avec un message clair :
+   ```
+   fix(security): correct critical and high-severity vulnerabilities
+
+   - Liste des corrections principales
+
+   Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>
+   ```
+3. **Pusher la branche** : `git push -u origin security/audit-fix-YYYY-MM-DD`
+4. **Creer la PR** avec `gh pr create` en incluant le rapport complet dans le body :
+
+```
+gh pr create --title "fix(security): audit and fix critical vulnerabilities" --body "$(cat <<'EOF'
+## Rapport de Securite
+
+### Resume
+- **Niveau de risque global** : [niveau]
+- **Problemes corriges** : X critique(s), Y eleve(s)
+- **Problemes restants (non corriges)** : Z modere(s), W faible(s)
+
+### Corrections appliquees
+
+#### [CRITIQUE/ELEVE] Titre du probleme
+- **Fichier** : `chemin/vers/fichier.ts:ligne`
+- **Description** : Explication du risque
+- **Impact** : Ce qu'un attaquant pourrait faire
+- **Correction appliquee** : Description de la correction
+
+### Problemes restants (a traiter manuellement)
+
+#### [MODERE/FAIBLE] Titre du probleme
+- **Fichier** : `chemin/vers/fichier.ts:ligne`
+- **Description** : Explication du risque
+- **Recommandation** : Action suggeree
+
+---
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+EOF
+)"
+```
 
 ## Categories de risques a verifier
 
@@ -47,27 +115,11 @@ Tu es un expert en securite applicative specialise dans les stacks NestJS/Expres
 - Messages d'erreur qui revelent la structure interne (noms de tables, chemins de fichiers)
 - Pas de distinction entre erreurs 401/403/404 (information leaking)
 
-## Format du rapport
-
-```markdown
-# Rapport de Securite
-
-## Resume
-- **Niveau de risque global** : Critique / Eleve / Modere / Faible
-- **Nombre de problemes** : X critique(s), Y eleve(s), Z modere(s)
-
-## Problemes identifies
-
-### [CRITIQUE/ELEVE/MODERE/FAIBLE] Titre du probleme
-- **Fichier** : `chemin/vers/fichier.ts:ligne`
-- **Description** : Explication claire du risque
-- **Impact** : Ce qu'un attaquant pourrait faire
-- **Correction** : Code corrige ou etapes a suivre
-```
-
 ## Regles importantes
 
-- Classe chaque probleme par severite (Critique > Eleve > Modere > Faible) pour aider a prioriser
+- **Corrige UNIQUEMENT les problemes Critiques et Eleves** — les Moderes/Faibles sont documentes dans la PR
 - Ne signale pas les faux positifs evidents : si une valeur est constante et non derivee d'une entree utilisateur, ce n'est pas une injection
-- Propose toujours un correctif concret, pas juste "il faudrait valider les entrees"
+- Chaque correction doit etre minimale et ciblee — ne pas refactorer du code qui fonctionne
+- Verifier que le build passe apres les corrections
 - Si tu ne trouves rien de significatif, dis-le clairement plutot que d'inventer des problemes
+- **Ne JAMAIS commiter de secrets, meme pour les supprimer du code** — utilise des variables d'environnement a la place
