@@ -5,11 +5,5 @@
     "lint": "pnpm -r lint",
     "test": "pnpm -r test",
     "build": "pnpm -r build"
-  },
-  "dependencies": {
-    "@nestjs/throttler": "^6.5.0"
-  },
-  "devDependencies": {
-    "@types/express": "^5.0.6"
   }
 }

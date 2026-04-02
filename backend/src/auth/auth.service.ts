@@ -66,9 +66,10 @@ export class AuthService {
     token: string,
     expiresAt: Date
   ): Promise<void> {
+    const hashedToken = await bcrypt.hash(token, 10)
     await this.refreshTokenModel.create({
       userId,
-      token,
+      token: hashedToken,
       expiresAt
     })
   }
@@ -78,18 +79,18 @@ export class AuthService {
   }
 
   private async verifyRefreshToken(
-    token: string
+    token: string,
+    userId: string
   ): Promise<RefreshTokenDocument | null> {
-    const storedToken = await this.refreshTokenModel
-      .findOne({ token })
-      .populate("userId")
-      .lean()
+    const storedTokens = await this.refreshTokenModel.find({ userId })
 
-    if (!storedToken || storedToken.expiresAt < new Date()) {
-      return null
+    for (const storedToken of storedTokens) {
+      if (storedToken.expiresAt < new Date()) continue
+      const isMatch = await bcrypt.compare(token, storedToken.token)
+      if (isMatch) return storedToken
     }
 
-    return storedToken as unknown as RefreshTokenDocument
+    return null
   }
 
   private sanitizeUser(user: UserDocument): SafeUser {
@@ -141,10 +142,12 @@ export class AuthService {
   }
 
   private async generateAuthResponse(user: UserDocument): Promise<{
-    user: Record<string, unknown>
+    user: SafeUser
     accessToken: string
     refreshToken: string
   }> {
+    await this.invalidateRefreshTokens(user._id.toString())
+
     const payload = this.buildPayload(user)
     const accessToken = this.createAccessToken(payload)
     const refreshToken = this.createRefreshToken(user._id.toString())
@@ -163,13 +166,20 @@ export class AuthService {
   }
 
   async refreshTokens(refreshToken: string): Promise<AuthTokens> {
+    let decoded: { sub: string; type?: string }
     try {
-      this.jwtService.verify<{ sub: string }>(refreshToken)
+      decoded = this.jwtService.verify<{ sub: string; type?: string }>(
+        refreshToken
+      )
     } catch {
       throw new UnauthorizedException("Refresh token invalide ou expiré")
     }
 
-    const storedToken = await this.verifyRefreshToken(refreshToken)
+    if (decoded.type !== "refresh") {
+      throw new UnauthorizedException("Token invalide")
+    }
+
+    const storedToken = await this.verifyRefreshToken(refreshToken, decoded.sub)
     if (!storedToken) {
       throw new UnauthorizedException("Refresh token invalide ou expiré")
     }
