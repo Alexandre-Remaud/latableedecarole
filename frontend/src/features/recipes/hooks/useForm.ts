@@ -20,6 +20,7 @@ export function useRecipeForm(recipeId?: string) {
     defaultValues: {
       title: "",
       description: "",
+      image: null,
       category: "main_course",
       servings: 1,
       prepTime: 0,

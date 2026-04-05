@@ -18,9 +18,20 @@ const stepSchema = z.object({
   note: z.string().optional()
 })
 
+const imageSchema = z
+  .object({
+    originalUrl: z.string(),
+    thumbnailUrl: z.string(),
+    mediumUrl: z.string(),
+    publicId: z.string()
+  })
+  .nullable()
+  .optional()
+
 export const recipeFormSchema = z.object({
   title: z.string().min(1, "Le nom de la recette est requis"),
   description: z.string().min(1, "La description est requise"),
+  image: imageSchema,
   category: z.enum([
     "appetizer",
     "starter",

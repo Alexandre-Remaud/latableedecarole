@@ -133,6 +133,14 @@ export default function RecipeDetail() {
         )}
       </div>
 
+      {recipe.imageMediumUrl && (
+        <img
+          src={recipe.imageMediumUrl}
+          alt={recipe.title}
+          className="w-full h-64 object-cover rounded-xl mb-6"
+        />
+      )}
+
       <h1 className="font-display text-2xl font-bold text-gray-800 mb-2">
         {recipe.title}
       </h1>

@@ -5,6 +5,7 @@ import { APP_GUARD } from "@nestjs/core"
 import { ThrottlerModule, ThrottlerGuard } from "@nestjs/throttler"
 import { RecipesModule } from "./recipes/recipes.module"
 import { AuthModule } from "./auth/auth.module"
+import { UploadModule } from "./upload/upload.module"
 import { JwtAuthGuard } from "./auth/guards/jwt-auth.guard"
 import { RolesGuard } from "./auth/guards/roles.guard"
 import { validate } from "./config/env.validation"
@@ -31,7 +32,8 @@ import { validate } from "./config/env.validation"
       inject: [ConfigService]
     }),
     AuthModule,
-    RecipesModule
+    RecipesModule,
+    UploadModule
   ],
   providers: [
     {

@@ -1,5 +1,8 @@
 # compiled output
 /dist
+
+# uploaded files (local dev storage)
+/uploads
 /node_modules
 /build
 

@@ -16,6 +16,10 @@ export type Recipe = {
     temperatureUnit?: "C" | "F";
     note?: string;
   }[];
+  imageUrl?: string;
+  imageThumbnailUrl?: string;
+  imageMediumUrl?: string;
+  imagePublicId?: string;
   servings?: number;
   prepTime?: number;
   cookTime?: number;
@@ -48,6 +52,10 @@ export type CreateRecipeContract = {
     temperatureUnit?: "C" | "F";
     note?: string;
   }[];
+  imageUrl?: string;
+  imageThumbnailUrl?: string;
+  imageMediumUrl?: string;
+  imagePublicId?: string;
   servings?: number;
   difficulty?: "easy" | "medium" | "hard";
   category?: string;

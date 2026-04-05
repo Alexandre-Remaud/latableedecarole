@@ -1,6 +1,9 @@
 {
   "name": "chez-carole",
   "private": true,
+  "pnpm": {
+    "onlyBuiltDependencies": ["sharp"]
+  },
   "scripts": {
     "lint": "pnpm -r lint",
     "test": "pnpm -r test",

@@ -8,6 +8,7 @@ import { UpdateRecipeDto } from "./dto/update-recipe.dto"
 import { InjectModel } from "@nestjs/mongoose"
 import { Model, isValidObjectId, Types } from "mongoose"
 import { Recipe } from "./entities/recipe.entity"
+import { UploadService } from "../upload/upload.service"
 
 const ALLOWED_UPDATE_FIELDS = [
   "title",
@@ -15,6 +16,9 @@ const ALLOWED_UPDATE_FIELDS = [
   "ingredients",
   "steps",
   "imageUrl",
+  "imageThumbnailUrl",
+  "imageMediumUrl",
+  "imagePublicId",
   "prepTime",
   "cookTime",
   "servings",
@@ -24,7 +28,10 @@ const ALLOWED_UPDATE_FIELDS = [
 
 @Injectable()
 export class RecipesService {
-  constructor(@InjectModel(Recipe.name) private recipeModel: Model<Recipe>) {}
+  constructor(
+    @InjectModel(Recipe.name) private recipeModel: Model<Recipe>,
+    private readonly uploadService: UploadService
+  ) {}
 
   private validateObjectId(id: string): void {
     if (!isValidObjectId(id)) {
@@ -99,6 +106,9 @@ export class RecipesService {
     const recipe = await this.recipeModel.findByIdAndDelete(id).exec()
     if (!recipe) {
       throw new NotFoundException("Recipe not found")
+    }
+    if (recipe.imagePublicId) {
+      await this.uploadService.deleteByPublicId(recipe.imagePublicId)
     }
     return recipe
   }

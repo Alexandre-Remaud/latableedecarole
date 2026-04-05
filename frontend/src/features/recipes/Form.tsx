@@ -1,7 +1,10 @@
+import { useController } from "react-hook-form"
 import IngredientField from "./IngredientField"
 import StepField from "./StepField"
 import { CATEGORIES } from "@recipes/constants/categories"
 import { useRecipeForm } from "@recipes/hooks/useForm"
+import { ImageUpload } from "@/features/upload"
+import type { RecipeFormData } from "@recipes/schema"
 
 interface FormProps {
   recipeId?: string
@@ -15,6 +18,11 @@ export default function Form({ recipeId }: FormProps) {
     control,
     formState: { errors, isSubmitting }
   } = form
+
+  const imageField = useController<RecipeFormData, "image">({
+    control,
+    name: "image"
+  })
 
   if (isLoading) {
     return (
@@ -74,6 +82,14 @@ export default function Form({ recipeId }: FormProps) {
               {errors.description && (
                 <p className="error-message">{errors.description.message}</p>
               )}
+            </div>
+
+            <div>
+              <label className="label-field">Photo</label>
+              <ImageUpload
+                value={imageField.field.value}
+                onChange={imageField.field.onChange}
+              />
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">

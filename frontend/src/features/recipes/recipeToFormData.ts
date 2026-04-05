@@ -5,6 +5,14 @@ export function recipeToFormData(recipe: Recipe): RecipeFormData {
   return {
     title: recipe.title,
     description: recipe.description,
+    image: recipe.imagePublicId
+      ? {
+          originalUrl: recipe.imageUrl!,
+          thumbnailUrl: recipe.imageThumbnailUrl!,
+          mediumUrl: recipe.imageMediumUrl!,
+          publicId: recipe.imagePublicId
+        }
+      : null,
     category: (recipe.category as RecipeFormData["category"]) ?? "main_course",
     servings: recipe.servings ?? 1,
     prepTime: recipe.prepTime ?? 0,

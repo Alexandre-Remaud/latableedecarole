@@ -58,6 +58,15 @@ export class Recipe {
   @Prop()
   imageUrl?: string
 
+  @Prop()
+  imageThumbnailUrl?: string
+
+  @Prop()
+  imageMediumUrl?: string
+
+  @Prop()
+  imagePublicId?: string
+
   @Prop({ default: 0 })
   prepTime?: number
 

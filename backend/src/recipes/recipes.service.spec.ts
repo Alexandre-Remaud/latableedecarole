@@ -5,6 +5,7 @@ import { RecipesService } from "./recipes.service"
 import { Recipe } from "./entities/recipe.entity"
 import { CreateRecipeDto } from "./dto/create-recipe.dto"
 import { UpdateRecipeDto } from "./dto/update-recipe.dto"
+import { UploadService } from "../upload/upload.service"
 
 const VALID_ID = "507f1f77bcf86cd799439011"
 const INVALID_ID = "not-a-valid-id"
@@ -40,6 +41,12 @@ const mockRecipeModel = {
   findByIdAndDelete: jest.fn()
 }
 
+const mockUploadService = {
+  upload: jest.fn(),
+  delete: jest.fn(),
+  deleteByPublicId: jest.fn()
+}
+
 describe("RecipesService", () => {
   let service: RecipesService
 
@@ -50,6 +57,10 @@ describe("RecipesService", () => {
         {
           provide: getModelToken(Recipe.name),
           useValue: mockRecipeModel
+        },
+        {
+          provide: UploadService,
+          useValue: mockUploadService
         }
       ]
     }).compile()
@@ -206,6 +217,30 @@ describe("RecipesService", () => {
 
       expect(mockRecipeModel.findByIdAndDelete).toHaveBeenCalledWith(VALID_ID)
       expect(result).toEqual(mockRecipe)
+    })
+
+    it("should delete associated image when recipe has imagePublicId", async () => {
+      const recipeWithImage = { ...mockRecipe, imagePublicId: "some-uuid" }
+      mockRecipeModel.findByIdAndDelete.mockReturnValue({
+        exec: jest.fn().mockResolvedValue(recipeWithImage)
+      })
+      mockUploadService.deleteByPublicId.mockResolvedValue(undefined)
+
+      await service.remove(VALID_ID)
+
+      expect(mockUploadService.deleteByPublicId).toHaveBeenCalledWith(
+        "some-uuid"
+      )
+    })
+
+    it("should not call uploadService when recipe has no image", async () => {
+      mockRecipeModel.findByIdAndDelete.mockReturnValue({
+        exec: jest.fn().mockResolvedValue(mockRecipe)
+      })
+
+      await service.remove(VALID_ID)
+
+      expect(mockUploadService.deleteByPublicId).not.toHaveBeenCalled()
     })
 
     it("should throw NotFoundException if recipe not found", async () => {

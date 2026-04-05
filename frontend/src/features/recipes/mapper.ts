@@ -25,6 +25,13 @@ function toCreateRecipePayload(formData: RecipeFormData): CreateRecipeContract {
       ...(s.note?.trim() && { note: s.note.trim() })
     })),
 
+    ...(formData.image && {
+      imageUrl: formData.image.originalUrl,
+      imageThumbnailUrl: formData.image.thumbnailUrl,
+      imageMediumUrl: formData.image.mediumUrl,
+      imagePublicId: formData.image.publicId
+    }),
+
     ...(formData.servings && { servings: formData.servings }),
     ...(formData.difficulty && { difficulty: formData.difficulty }),
     ...(formData.category?.length && { category: formData.category }),
