@@ -42,7 +42,8 @@ describe("AuthController", () => {
       register: jest.fn(),
       login: jest.fn(),
       refreshTokens: jest.fn(),
-      logout: jest.fn()
+      logout: jest.fn(),
+      validateUser: jest.fn()
     }
 
     const module: TestingModule = await Test.createTestingModule({
@@ -145,7 +146,7 @@ describe("AuthController", () => {
   })
 
   describe("getProfile", () => {
-    it("should return user profile from JWT payload", () => {
+    it("should return full user data when validateUser succeeds", async () => {
       const payload = {
         sub: "user-id",
         email: "test@example.com",
@@ -153,7 +154,45 @@ describe("AuthController", () => {
         role: Role.USER
       }
 
-      const result = controller.getProfile(payload)
+      const fullUser = {
+        _id: "user-id",
+        email: "test@example.com",
+        name: "Test",
+        role: Role.USER,
+        bio: "Hello",
+        avatarUrl: "https://example.com/avatar.jpg",
+        toObject: jest.fn().mockReturnValue({
+          _id: "user-id",
+          email: "test@example.com",
+          name: "Test",
+          role: Role.USER,
+          bio: "Hello",
+          avatarUrl: "https://example.com/avatar.jpg",
+          password: "hashed",
+          __v: 0
+        })
+      }
+      authService.validateUser.mockResolvedValue(fullUser)
+
+      const result = await controller.getProfile(payload)
+
+      expect(authService.validateUser).toHaveBeenCalledWith(payload)
+      expect(result).not.toHaveProperty("password")
+      expect(result).not.toHaveProperty("__v")
+      expect(result).toHaveProperty("email", "test@example.com")
+    })
+
+    it("should return JWT payload data when validateUser returns null", async () => {
+      const payload = {
+        sub: "user-id",
+        email: "test@example.com",
+        name: "Test",
+        role: Role.USER
+      }
+
+      authService.validateUser.mockResolvedValue(null)
+
+      const result = await controller.getProfile(payload)
 
       expect(result).toEqual({
         id: "user-id",
