@@ -67,6 +67,7 @@ describe("UploadService", () => {
       expect(imageModel.create).toHaveBeenCalledWith(
         expect.objectContaining({
           ...storageResult,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           userId: expect.any(Types.ObjectId)
         })
       )
@@ -74,7 +75,10 @@ describe("UploadService", () => {
     })
 
     it("should reject unsupported mime types", async () => {
-      const badFile = { ...validFile, mimetype: "image/gif" } as Express.Multer.File
+      const badFile = {
+        ...validFile,
+        mimetype: "image/gif"
+      } as Express.Multer.File
 
       await expect(service.upload(badFile, userId)).rejects.toThrow(
         BadRequestException

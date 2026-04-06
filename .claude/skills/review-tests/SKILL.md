@@ -54,6 +54,7 @@ Pour CHAQUE fichier source qui n'est pas entierement teste :
 2. **Lancer les tests frontend** : `cd frontend && npx vitest run --coverage 2>&1`
 3. **Corriger les tests qui echouent** — un test qui fail n'est pas un test livre.
 4. **Verifier que le build passe** : `npx tsc --noEmit` (backend et frontend).
+5. **Verifier le lint** : `cd backend && npx eslint . 2>&1` et `cd frontend && npx eslint . 2>&1`. Corriger toutes les erreurs de lint avant de continuer — ne jamais pusher du code avec des erreurs de lint.
 
 ### Phase 5 — Commit et PR
 

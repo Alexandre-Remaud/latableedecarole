@@ -8,7 +8,12 @@ describe("UploadController", () => {
   let controller: UploadController
   let uploadService: Record<string, jest.Mock>
 
-  const mockUser = { sub: "user-id", email: "test@test.com", name: "Test", role: Role.USER }
+  const mockUser = {
+    sub: "user-id",
+    email: "test@test.com",
+    name: "Test",
+    role: Role.USER
+  }
 
   beforeEach(async () => {
     uploadService = {
@@ -54,7 +59,10 @@ describe("UploadController", () => {
 
     it("should throw BadRequestException when no file provided", async () => {
       await expect(
-        controller.uploadImage(undefined as any, mockUser)
+        controller.uploadImage(
+          undefined as unknown as Express.Multer.File,
+          mockUser
+        )
       ).rejects.toThrow(BadRequestException)
     })
   })

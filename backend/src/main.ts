@@ -3,7 +3,7 @@ import { AppModule } from "./app.module"
 import { ConfigService } from "@nestjs/config"
 import helmet from "helmet"
 import { ValidationPipe } from "@nestjs/common"
-import { Response } from "express"
+import { Response, NextFunction } from "express"
 import cookieParser from "cookie-parser"
 import express from "express"
 import * as path from "node:path"
@@ -58,10 +58,14 @@ async function bootstrap() {
     credentials: true
   })
 
-  app.use("/uploads", (_req, res, next) => {
-    res.setHeader("Cross-Origin-Resource-Policy", "cross-origin")
-    next()
-  }, express.static(path.join(process.cwd(), "uploads")))
+  app.use(
+    "/uploads",
+    (_req: unknown, res: Response, next: NextFunction) => {
+      res.setHeader("Cross-Origin-Resource-Policy", "cross-origin")
+      next()
+    },
+    express.static(path.join(process.cwd(), "uploads"))
+  )
 
   const port = configService.get<number>("PORT", 3000)
   try {

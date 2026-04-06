@@ -117,7 +117,9 @@ describe("AuthController", () => {
 
       await controller.refresh(mockReq, mockRes)
 
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       expect(mockRes.status).toHaveBeenCalledWith(HttpStatus.UNAUTHORIZED)
+
       expect(mockRes.json).toHaveBeenCalledWith({
         message: "Refresh token manquant"
       })
