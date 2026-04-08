@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useAuth } from "@/features/auth/hooks"
-import { useRecipeReviews, useSubmitReview } from "./hooks"
+import { useSubmitReview } from "./hooks"
 import StarRating from "./StarRating"
 import ReviewForm from "./ReviewForm"
 import ConfirmDialog from "@/components/ConfirmDialog"
@@ -8,19 +8,24 @@ import type { Review } from "./contract"
 
 interface ReviewListProps {
   recipeId: string
+  reviews: Review[]
+  total: number
+  hasMore: boolean
+  loadingMore: boolean
+  loadMore: () => void
+  refresh: () => void
 }
 
-export default function ReviewList({ recipeId }: ReviewListProps) {
+export default function ReviewList({
+  recipeId,
+  reviews,
+  total,
+  hasMore,
+  loadingMore,
+  loadMore,
+  refresh
+}: ReviewListProps) {
   const { user } = useAuth()
-  const {
-    reviews,
-    total,
-    loading,
-    loadingMore,
-    hasMore,
-    loadMore,
-    refresh
-  } = useRecipeReviews(recipeId)
   const { deleteReview } = useSubmitReview(recipeId, refresh)
   const [editingReview, setEditingReview] = useState<Review | null>(null)
   const [deletingId, setDeletingId] = useState<string | null>(null)
@@ -42,14 +47,6 @@ export default function ReviewList({ recipeId }: ReviewListProps) {
       month: "long",
       year: "numeric"
     })
-  }
-
-  if (loading) {
-    return (
-      <div className="text-center py-6 text-gray-500 text-sm">
-        Chargement des avis...
-      </div>
-    )
   }
 
   return (

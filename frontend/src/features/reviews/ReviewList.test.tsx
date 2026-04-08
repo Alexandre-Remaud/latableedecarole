@@ -7,7 +7,6 @@ vi.mock("@/features/auth/hooks", () => ({
 }))
 
 vi.mock("./hooks", () => ({
-  useRecipeReviews: vi.fn(),
   useSubmitReview: vi.fn()
 }))
 
@@ -22,7 +21,7 @@ vi.mock("@/components/ConfirmDialog", () => ({
 }))
 
 import { useAuth } from "@/features/auth/hooks"
-import { useRecipeReviews, useSubmitReview } from "./hooks"
+import { useSubmitReview } from "./hooks"
 
 const mockReviews = [
   {
@@ -54,6 +53,16 @@ const mockReviews = [
   }
 ]
 
+const defaultProps = {
+  recipeId: "recipe-1",
+  reviews: mockReviews,
+  total: 2,
+  hasMore: false,
+  loadingMore: false,
+  loadMore: vi.fn(),
+  refresh: vi.fn()
+}
+
 describe("ReviewList", () => {
   beforeEach(() => {
     vi.clearAllMocks()
@@ -73,36 +82,10 @@ describe("ReviewList", () => {
     })
   })
 
-  it("should show loading state", () => {
-    vi.mocked(useRecipeReviews).mockReturnValue({
-      reviews: [],
-      total: 0,
-      averageRating: 0,
-      loading: true,
-      loadingMore: false,
-      hasMore: false,
-      loadMore: vi.fn(),
-      refresh: vi.fn()
-    })
-
-    render(<ReviewList recipeId="recipe-1" />)
-
-    expect(screen.getByText("Chargement des avis...")).toBeInTheDocument()
-  })
-
   it("should show empty state when no reviews", () => {
-    vi.mocked(useRecipeReviews).mockReturnValue({
-      reviews: [],
-      total: 0,
-      averageRating: 0,
-      loading: false,
-      loadingMore: false,
-      hasMore: false,
-      loadMore: vi.fn(),
-      refresh: vi.fn()
-    })
-
-    render(<ReviewList recipeId="recipe-1" />)
+    render(
+      <ReviewList {...defaultProps} reviews={[]} total={0} />
+    )
 
     expect(
       screen.getByText("Aucun avis pour le moment. Soyez le premier !")
@@ -110,18 +93,7 @@ describe("ReviewList", () => {
   })
 
   it("should render reviews with user info", () => {
-    vi.mocked(useRecipeReviews).mockReturnValue({
-      reviews: mockReviews,
-      total: 2,
-      averageRating: 4.5,
-      loading: false,
-      loadingMore: false,
-      hasMore: false,
-      loadMore: vi.fn(),
-      refresh: vi.fn()
-    })
-
-    render(<ReviewList recipeId="recipe-1" />)
+    render(<ReviewList {...defaultProps} />)
 
     expect(screen.getByText("Avis (2)")).toBeInTheDocument()
     expect(screen.getByText("Alice")).toBeInTheDocument()
@@ -130,52 +102,21 @@ describe("ReviewList", () => {
   })
 
   it("should display the total count in the header", () => {
-    vi.mocked(useRecipeReviews).mockReturnValue({
-      reviews: mockReviews,
-      total: 2,
-      averageRating: 4.5,
-      loading: false,
-      loadingMore: false,
-      hasMore: false,
-      loadMore: vi.fn(),
-      refresh: vi.fn()
-    })
-
-    render(<ReviewList recipeId="recipe-1" />)
+    render(<ReviewList {...defaultProps} />)
 
     expect(screen.getByText("Avis (2)")).toBeInTheDocument()
   })
 
   it("should show 'Voir plus' button when hasMore is true", () => {
-    vi.mocked(useRecipeReviews).mockReturnValue({
-      reviews: mockReviews,
-      total: 20,
-      averageRating: 4.5,
-      loading: false,
-      loadingMore: false,
-      hasMore: true,
-      loadMore: vi.fn(),
-      refresh: vi.fn()
-    })
-
-    render(<ReviewList recipeId="recipe-1" />)
+    render(
+      <ReviewList {...defaultProps} total={20} hasMore={true} />
+    )
 
     expect(screen.getByText("Voir plus d'avis")).toBeInTheDocument()
   })
 
   it("should not show 'Voir plus' button when hasMore is false", () => {
-    vi.mocked(useRecipeReviews).mockReturnValue({
-      reviews: mockReviews,
-      total: 2,
-      averageRating: 4.5,
-      loading: false,
-      loadingMore: false,
-      hasMore: false,
-      loadMore: vi.fn(),
-      refresh: vi.fn()
-    })
-
-    render(<ReviewList recipeId="recipe-1" />)
+    render(<ReviewList {...defaultProps} />)
 
     expect(screen.queryByText("Voir plus d'avis")).not.toBeInTheDocument()
   })
@@ -196,21 +137,10 @@ describe("ReviewList", () => {
       logout: vi.fn(),
       refreshUser: vi.fn()
     } as ReturnType<typeof useAuth>)
-    vi.mocked(useRecipeReviews).mockReturnValue({
-      reviews: mockReviews,
-      total: 2,
-      averageRating: 4.5,
-      loading: false,
-      loadingMore: false,
-      hasMore: false,
-      loadMore: vi.fn(),
-      refresh: vi.fn()
-    })
 
-    render(<ReviewList recipeId="recipe-1" />)
+    render(<ReviewList {...defaultProps} />)
 
     expect(screen.getByText("Modifier")).toBeInTheDocument()
-    // There should be at least one Supprimer button (owner can delete their own)
     expect(screen.getAllByText("Supprimer").length).toBeGreaterThanOrEqual(1)
   })
 
@@ -230,37 +160,15 @@ describe("ReviewList", () => {
       logout: vi.fn(),
       refreshUser: vi.fn()
     } as ReturnType<typeof useAuth>)
-    vi.mocked(useRecipeReviews).mockReturnValue({
-      reviews: mockReviews,
-      total: 2,
-      averageRating: 4.5,
-      loading: false,
-      loadingMore: false,
-      hasMore: false,
-      loadMore: vi.fn(),
-      refresh: vi.fn()
-    })
 
-    render(<ReviewList recipeId="recipe-1" />)
+    render(<ReviewList {...defaultProps} />)
 
-    // Admin sees Supprimer on all reviews but not Modifier (not owner)
     expect(screen.getAllByText("Supprimer")).toHaveLength(2)
     expect(screen.queryByText("Modifier")).not.toBeInTheDocument()
   })
 
   it("should show avatar image when user has avatarUrl", () => {
-    vi.mocked(useRecipeReviews).mockReturnValue({
-      reviews: mockReviews,
-      total: 2,
-      averageRating: 4.5,
-      loading: false,
-      loadingMore: false,
-      hasMore: false,
-      loadMore: vi.fn(),
-      refresh: vi.fn()
-    })
-
-    render(<ReviewList recipeId="recipe-1" />)
+    render(<ReviewList {...defaultProps} />)
 
     const img = screen.getByAltText("Alice")
     expect(img).toBeInTheDocument()
@@ -268,18 +176,7 @@ describe("ReviewList", () => {
   })
 
   it("should show initial letter when user has no avatarUrl", () => {
-    vi.mocked(useRecipeReviews).mockReturnValue({
-      reviews: mockReviews,
-      total: 2,
-      averageRating: 4.5,
-      loading: false,
-      loadingMore: false,
-      hasMore: false,
-      loadMore: vi.fn(),
-      refresh: vi.fn()
-    })
-
-    render(<ReviewList recipeId="recipe-1" />)
+    render(<ReviewList {...defaultProps} />)
 
     expect(screen.getByText("B")).toBeInTheDocument()
   })

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { Link, useParams, useNavigate } from "@tanstack/react-router"
 import toast from "react-hot-toast"
 import { recipeService } from "@recipes/api"
@@ -11,6 +11,7 @@ import FavoriteButton from "@/features/favorites/FavoriteButton"
 import ReviewSummary from "@/features/reviews/ReviewSummary"
 import ReviewForm from "@/features/reviews/ReviewForm"
 import ReviewList from "@/features/reviews/ReviewList"
+import { useRecipeReviews } from "@/features/reviews/hooks"
 
 export default function RecipeDetail() {
   const { id } = useParams({ from: "/recipes/$id" })
@@ -19,7 +20,6 @@ export default function RecipeDetail() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
-  const [reviewKey, setReviewKey] = useState(0)
   const { user } = useAuth()
 
   const isOwner = user && recipe && recipe.userId === user._id
@@ -224,18 +224,7 @@ export default function RecipeDetail() {
         </ol>
       </section>
 
-      <section className="mt-10">
-        {user && !isOwner && (
-          <div className="mb-6">
-            <ReviewForm
-              key={reviewKey}
-              recipeId={recipe._id}
-              onSuccess={() => setReviewKey((k) => k + 1)}
-            />
-          </div>
-        )}
-        <ReviewList key={`list-${reviewKey}`} recipeId={recipe._id} />
-      </section>
+      <ReviewsSection recipeId={recipe._id} isOwner={!!isOwner} />
 
       {showDeleteDialog && (
         <ConfirmDialog
@@ -246,5 +235,53 @@ export default function RecipeDetail() {
         />
       )}
     </div>
+  )
+}
+
+function ReviewsSection({
+  recipeId,
+  isOwner
+}: {
+  recipeId: string
+  isOwner: boolean
+}) {
+  const { user } = useAuth()
+  const reviewsData = useRecipeReviews(recipeId)
+  const { reviews, loading, refresh } = reviewsData
+
+  const hasUserReview = useMemo(
+    () => (user ? reviews.some((r) => r.userId === user._id) : false),
+    [reviews, user]
+  )
+
+  const showForm = !!user && !isOwner && !hasUserReview
+
+  if (loading) {
+    return (
+      <section className="mt-10">
+        <div className="text-center py-6 text-gray-500 text-sm">
+          Chargement des avis...
+        </div>
+      </section>
+    )
+  }
+
+  return (
+    <section className="mt-10">
+      {showForm && (
+        <div className="mb-6">
+          <ReviewForm recipeId={recipeId} onSuccess={refresh} />
+        </div>
+      )}
+      <ReviewList
+        recipeId={recipeId}
+        reviews={reviewsData.reviews}
+        total={reviewsData.total}
+        hasMore={reviewsData.hasMore}
+        loadingMore={reviewsData.loadingMore}
+        loadMore={reviewsData.loadMore}
+        refresh={refresh}
+      />
+    </section>
   )
 }
