@@ -36,7 +36,16 @@ export default function LoginPage() {
     <div className="mx-auto max-w-md px-4 py-12">
       <h1 className="mb-8 text-3xl font-bold text-gray-900">Connexion</h1>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && !isLoading) {
+            e.preventDefault()
+            handleSubmit(onSubmit)()
+          }
+        }}
+        className="space-y-6"
+      >
         <div>
           <label htmlFor="email" className="block text-sm font-medium text-gray-700">
             Email
