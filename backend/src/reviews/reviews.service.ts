@@ -35,7 +35,7 @@ export class ReviewsService {
       throw new NotFoundException("Recipe not found")
     }
 
-    if (recipe.userId.toString() === userId) {
+    if (recipe.userId && recipe.userId.toString() === userId) {
       throw new ForbiddenException("Cannot review your own recipe")
     }
 
