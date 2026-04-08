@@ -7,6 +7,7 @@ import RecipeBadges from "@recipes/RecipeBadges"
 import ConfirmDialog from "@/components/ConfirmDialog"
 import type { Recipe } from "@recipes/contract"
 import { useAuth } from "@/features/auth/hooks"
+import FavoriteButton from "@/features/favorites/FavoriteButton"
 
 export default function RecipeDetail() {
   const { id } = useParams({ from: "/recipes/$id" })
@@ -141,9 +142,16 @@ export default function RecipeDetail() {
         />
       )}
 
-      <h1 className="font-display text-2xl font-bold text-gray-800 mb-2">
-        {recipe.title}
-      </h1>
+      <div className="flex items-center justify-between mb-2">
+        <h1 className="font-display text-2xl font-bold text-gray-800">
+          {recipe.title}
+        </h1>
+        <FavoriteButton
+          recipeId={recipe._id}
+          initialFavorited={recipe.isFavorited ?? false}
+          initialCount={recipe.favoritesCount ?? 0}
+        />
+      </div>
 
       <p className="text-gray-500 mb-6">{recipe.description}</p>
 

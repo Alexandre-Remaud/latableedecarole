@@ -28,6 +28,8 @@ export type Recipe = {
   userId?: string;
   createdAt?: string;
   updatedAt?: string;
+  favoritesCount?: number;
+  isFavorited?: boolean;
 };
 
 export type PaginatedRecipes = {

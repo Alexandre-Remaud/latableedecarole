@@ -23,13 +23,16 @@ export const recipeService = {
     if (search) params.set("search", search)
     params.set("skip", String(skip))
     params.set("limit", String(limit))
-    return apiFetch<PaginatedRecipes>(`${API_URL}/recipes?${params}`)
+    return apiFetch<PaginatedRecipes>(`${API_URL}/recipes?${params}`, {
+      credentials: "include"
+    })
   },
 
   async getRecipe(id: string) {
     return apiFetch<Recipe>(`${API_URL}/recipes/${id}`, {
       method: "GET",
-      headers: { "Content-Type": "application/json" }
+      headers: { "Content-Type": "application/json" },
+      credentials: "include"
     })
   },
 

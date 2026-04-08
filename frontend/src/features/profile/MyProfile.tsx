@@ -3,11 +3,14 @@ import { Link, useNavigate } from "@tanstack/react-router"
 import toast from "react-hot-toast"
 import { useAuth } from "@/features/auth/hooks"
 import { profileApi } from "./api"
+import { favoritesApi } from "@/features/favorites/api"
 import type { UserRecipesResponse } from "./contract"
+import type { Recipe } from "@recipes/contract"
 import ProfileHeader from "./components/ProfileHeader"
 import EditProfileModal from "./components/EditProfileModal"
 import ChangeEmailModal from "./components/ChangeEmailModal"
 import ChangePasswordModal from "./components/ChangePasswordModal"
+import FavoriteButton from "@/features/favorites/FavoriteButton"
 
 const RECIPES_LIMIT = 10
 
@@ -18,6 +21,11 @@ export default function MyProfile() {
   const [recipesTotal, setRecipesTotal] = useState(0)
   const [recipesPage, setRecipesPage] = useState(0)
   const [recipesLoading, setRecipesLoading] = useState(true)
+  const [activeTab, setActiveTab] = useState<"recipes" | "favorites">("recipes")
+  const [favorites, setFavorites] = useState<Recipe[]>([])
+  const [favoritesTotal, setFavoritesTotal] = useState(0)
+  const [favoritesSkip, setFavoritesSkip] = useState(0)
+  const [favoritesLoading, setFavoritesLoading] = useState(false)
   const [showEditProfile, setShowEditProfile] = useState(false)
   const [showChangeEmail, setShowChangeEmail] = useState(false)
   const [showChangePassword, setShowChangePassword] = useState(false)
@@ -45,6 +53,25 @@ export default function MyProfile() {
     [user]
   )
 
+  const loadFavorites = useCallback(async () => {
+    setFavoritesLoading(true)
+    try {
+      const result = await favoritesApi.getMyFavorites(favoritesSkip, RECIPES_LIMIT)
+      if (favoritesSkip === 0) {
+        setFavorites(result.data)
+      } else {
+        setFavorites((prev) => [...prev, ...result.data])
+      }
+      setFavoritesTotal(result.total)
+    } catch (err) {
+      toast.error(
+        err instanceof Error ? err.message : "Erreur lors du chargement"
+      )
+    } finally {
+      setFavoritesLoading(false)
+    }
+  }, [favoritesSkip])
+
   useEffect(() => {
     if (!isLoading && !user) {
       void navigate({ to: "/login" })
@@ -54,6 +81,12 @@ export default function MyProfile() {
       void loadRecipes(recipesPage)
     }
   }, [user, isLoading, recipesPage, navigate, loadRecipes])
+
+  useEffect(() => {
+    if (user && activeTab === "favorites") {
+      void loadFavorites()
+    }
+  }, [user, activeTab, loadFavorites])
 
   if (isLoading || !user) {
     return (
@@ -137,20 +170,96 @@ export default function MyProfile() {
         <div className="flex items-center gap-6 border-b border-gray-200 mb-6">
           <button
             type="button"
-            className="pb-3 text-sm font-medium text-warm-600 border-b-2 border-warm-600"
+            onClick={() => setActiveTab("recipes")}
+            className={`pb-3 text-sm font-medium ${
+              activeTab === "recipes"
+                ? "text-warm-600 border-b-2 border-warm-600"
+                : "text-gray-400 hover:text-gray-600"
+            }`}
           >
             Mes recettes
           </button>
           <button
             type="button"
-            className="pb-3 text-sm font-medium text-gray-400 cursor-not-allowed"
-            disabled
+            onClick={() => {
+              setActiveTab("favorites")
+              setFavoritesSkip(0)
+            }}
+            className={`pb-3 text-sm font-medium ${
+              activeTab === "favorites"
+                ? "text-warm-600 border-b-2 border-warm-600"
+                : "text-gray-400 hover:text-gray-600"
+            }`}
           >
-            Mes favoris (bientôt)
+            Mes favoris
           </button>
         </div>
 
-        {recipesLoading ? (
+        {activeTab === "favorites" ? (
+          favoritesLoading && favorites.length === 0 ? (
+            <div className="text-center py-8 text-gray-500">Chargement...</div>
+          ) : favorites.length === 0 ? (
+            <div className="text-center py-8">
+              <p className="text-gray-500">
+                Vous n&apos;avez pas encore de recettes en favoris.
+              </p>
+            </div>
+          ) : (
+            <>
+              <ul className="grid gap-4">
+                {favorites.map((recipe) => (
+                  <li
+                    key={recipe._id}
+                    className="bg-white border border-gray-100 rounded-xl p-5 hover:shadow-sm transition-shadow"
+                  >
+                    <Link
+                      to="/recipes/$id"
+                      params={{ id: recipe._id }}
+                      className="flex items-start gap-4"
+                    >
+                      {recipe.imageThumbnailUrl && (
+                        <img
+                          src={recipe.imageThumbnailUrl}
+                          alt={recipe.title}
+                          className="w-16 h-16 rounded-lg object-cover flex-shrink-0"
+                          loading="lazy"
+                        />
+                      )}
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center justify-between">
+                          <h3 className="font-display text-lg font-semibold text-gray-800 truncate">
+                            {recipe.title}
+                          </h3>
+                          <FavoriteButton
+                            recipeId={recipe._id}
+                            initialFavorited={true}
+                            initialCount={recipe.favoritesCount ?? 0}
+                          />
+                        </div>
+                        <p className="text-sm text-gray-500 mt-1 line-clamp-2">
+                          {recipe.description}
+                        </p>
+                      </div>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+
+              {favorites.length < favoritesTotal && (
+                <div className="mt-8 text-center">
+                  <button
+                    type="button"
+                    onClick={() => setFavoritesSkip(favorites.length)}
+                    disabled={favoritesLoading}
+                    className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium text-warm-700 bg-warm-50 border border-warm-200 rounded-xl hover:bg-warm-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {favoritesLoading ? "Chargement..." : "Voir plus"}
+                  </button>
+                </div>
+              )}
+            </>
+          )
+        ) : recipesLoading ? (
           <div className="text-center py-8 text-gray-500">Chargement...</div>
         ) : recipes.length === 0 ? (
           <div className="text-center py-8">

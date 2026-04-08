@@ -8,6 +8,7 @@ import ConfirmDialog from "@/components/ConfirmDialog"
 import type { Recipe } from "@recipes/contract"
 import { Route } from "@/routes/recipes/index"
 import { useAuth } from "@/features/auth/hooks"
+import FavoriteButton from "@/features/favorites/FavoriteButton"
 
 const LIMIT = 20
 
@@ -155,7 +156,14 @@ export default function Recipes() {
                 </div>
               </div>
 
-              <RecipeBadges recipe={recipe} className="mt-3" />
+              <div className="flex items-center justify-between mt-3">
+                <RecipeBadges recipe={recipe} />
+                <FavoriteButton
+                  recipeId={recipe._id}
+                  initialFavorited={recipe.isFavorited ?? false}
+                  initialCount={recipe.favoritesCount ?? 0}
+                />
+              </div>
             </Link>
 
             {user && (user._id === recipe.userId || user.role === "admin") && (

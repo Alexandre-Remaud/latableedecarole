@@ -7,6 +7,7 @@ import { RecipesModule } from "./recipes/recipes.module"
 import { AuthModule } from "./auth/auth.module"
 import { UploadModule } from "./upload/upload.module"
 import { UsersModule } from "./users/users.module"
+import { FavoritesModule } from "./favorites/favorites.module"
 import { JwtAuthGuard } from "./auth/guards/jwt-auth.guard"
 import { RolesGuard } from "./auth/guards/roles.guard"
 import { validate } from "./config/env.validation"
@@ -30,7 +31,8 @@ import { validate } from "./config/env.validation"
     AuthModule,
     RecipesModule,
     UploadModule,
-    UsersModule
+    UsersModule,
+    FavoritesModule
   ],
   providers: [
     {

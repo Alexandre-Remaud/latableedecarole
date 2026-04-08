@@ -9,6 +9,7 @@ import { InjectModel } from "@nestjs/mongoose"
 import { Model, isValidObjectId, Types } from "mongoose"
 import { Recipe } from "./entities/recipe.entity"
 import { UploadService } from "../upload/upload.service"
+import { FavoritesService } from "../favorites/favorites.service"
 
 const ALLOWED_UPDATE_FIELDS = [
   "title",
@@ -30,7 +31,8 @@ const ALLOWED_UPDATE_FIELDS = [
 export class RecipesService {
   constructor(
     @InjectModel(Recipe.name) private recipeModel: Model<Recipe>,
-    private readonly uploadService: UploadService
+    private readonly uploadService: UploadService,
+    private readonly favoritesService: FavoritesService
   ) {}
 
   private validateObjectId(id: string): void {
@@ -58,7 +60,13 @@ export class RecipesService {
     })
   }
 
-  async findAll(category?: string, search?: string, skip = 0, limit = 20) {
+  async findAll(
+    category?: string,
+    search?: string,
+    skip = 0,
+    limit = 20,
+    userId?: string
+  ) {
     const safeSkip = Math.max(0, skip)
     const safeLimit = Math.min(Math.max(1, limit), 100)
 
@@ -77,16 +85,36 @@ export class RecipesService {
         .exec(),
       this.recipeModel.countDocuments(filter)
     ])
-    return { data, total }
+
+    const enriched = await Promise.all(
+      data.map(async (recipe) => {
+        const recipeId = recipe._id.toString()
+        const favoritesCount =
+          await this.favoritesService.getFavoritesCount(recipeId)
+        const isFavorited = userId
+          ? await this.favoritesService.isFavorited(userId, recipeId)
+          : false
+        return { ...recipe.toObject(), favoritesCount, isFavorited }
+      })
+    )
+
+    return { data: enriched, total }
   }
 
-  async findOne(id: string) {
+  async findOne(id: string, userId?: string) {
     this.validateObjectId(id)
     const recipe = await this.recipeModel.findById(id).exec()
     if (!recipe) {
       throw new NotFoundException("Recipe not found")
     }
-    return recipe
+
+    const favoritesCount = await this.favoritesService.getFavoritesCount(id)
+    const isFavorited = userId
+      ? await this.favoritesService.isFavorited(userId, id)
+      : false
+
+    const recipeObj = recipe.toObject()
+    return { ...recipeObj, favoritesCount, isFavorited }
   }
 
   async update(id: string, updateRecipeDto: UpdateRecipeDto) {
@@ -110,6 +138,7 @@ export class RecipesService {
     if (recipe.imagePublicId) {
       await this.uploadService.deleteByPublicId(recipe.imagePublicId)
     }
+    await this.favoritesService.deleteByRecipeId(id)
     return recipe
   }
 }

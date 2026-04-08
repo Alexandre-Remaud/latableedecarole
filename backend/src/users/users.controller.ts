@@ -5,10 +5,27 @@ import { ChangeEmailDto } from "./dto/change-email.dto"
 import { ChangePasswordDto } from "./dto/change-password.dto"
 import { Public } from "../auth/decorators/public.decorator"
 import { CurrentUser } from "../auth/decorators/current-user.decorator"
+import { FavoritesService } from "../favorites/favorites.service"
 
 @Controller("users")
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly favoritesService: FavoritesService
+  ) {}
+
+  @Get("me/favorites")
+  getMyFavorites(
+    @CurrentUser("sub") userId: string,
+    @Query("skip") skip?: string,
+    @Query("limit") limit?: string
+  ) {
+    return this.favoritesService.getUserFavorites(
+      userId,
+      skip ? parseInt(skip, 10) : 0,
+      limit ? parseInt(limit, 10) : 20
+    )
+  }
 
   @Public()
   @Get(":id/profile")

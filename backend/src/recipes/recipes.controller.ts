@@ -26,20 +26,22 @@ export class RecipesController {
     @Query("category") category?: string,
     @Query("search") search?: string,
     @Query("skip") skip?: string,
-    @Query("limit") limit?: string
+    @Query("limit") limit?: string,
+    @CurrentUser("sub") userId?: string
   ) {
     return this.recipesService.findAll(
       category,
       search,
       skip ? parseInt(skip, 10) : 0,
-      limit ? parseInt(limit, 10) : 20
+      limit ? parseInt(limit, 10) : 20,
+      userId
     )
   }
 
   @Public()
   @Get(":id")
-  findOne(@Param("id") id: string) {
-    return this.recipesService.findOne(id)
+  findOne(@Param("id") id: string, @CurrentUser("sub") userId?: string) {
+    return this.recipesService.findOne(id, userId)
   }
 
   @Post()
