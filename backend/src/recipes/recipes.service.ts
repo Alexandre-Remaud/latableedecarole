@@ -10,6 +10,7 @@ import { Model, isValidObjectId, Types } from "mongoose"
 import { Recipe } from "./entities/recipe.entity"
 import { UploadService } from "../upload/upload.service"
 import { FavoritesService } from "../favorites/favorites.service"
+import { ReviewsService } from "../reviews/reviews.service"
 
 const ALLOWED_UPDATE_FIELDS = [
   "title",
@@ -32,7 +33,8 @@ export class RecipesService {
   constructor(
     @InjectModel(Recipe.name) private recipeModel: Model<Recipe>,
     private readonly uploadService: UploadService,
-    private readonly favoritesService: FavoritesService
+    private readonly favoritesService: FavoritesService,
+    private readonly reviewsService: ReviewsService
   ) {}
 
   private validateObjectId(id: string): void {
@@ -139,6 +141,7 @@ export class RecipesService {
       await this.uploadService.deleteByPublicId(recipe.imagePublicId)
     }
     await this.favoritesService.deleteByRecipeId(id)
+    await this.reviewsService.deleteByRecipeId(id)
     return recipe
   }
 }

@@ -97,6 +97,12 @@ export class Recipe {
   @Prop({ type: Types.ObjectId, ref: "User", required: true })
   userId: Types.ObjectId
 
+  @Prop({ default: 0 })
+  averageRating: number
+
+  @Prop({ default: 0 })
+  ratingsCount: number
+
   createdAt: Date
   updatedAt: Date
 }

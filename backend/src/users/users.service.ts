@@ -40,7 +40,9 @@ export class UsersService {
       throw new NotFoundException("Utilisateur non trouvé")
     }
 
-    const recipesCount = await this.recipeModel.countDocuments({ userId: new Types.ObjectId(id) })
+    const recipesCount = await this.recipeModel.countDocuments({
+      userId: new Types.ObjectId(id)
+    })
 
     return {
       id: user._id,

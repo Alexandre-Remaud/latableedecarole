@@ -30,6 +30,8 @@ export type Recipe = {
   updatedAt?: string;
   favoritesCount?: number;
   isFavorited?: boolean;
+  averageRating?: number;
+  ratingsCount?: number;
 };
 
 export type PaginatedRecipes = {

@@ -5,12 +5,14 @@ import { MongooseModule } from "@nestjs/mongoose"
 import { RecipeSchema } from "./entities/recipe.entity"
 import { UploadModule } from "../upload/upload.module"
 import { FavoritesModule } from "../favorites/favorites.module"
+import { ReviewsModule } from "../reviews/reviews.module"
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: "Recipe", schema: RecipeSchema }]),
     UploadModule,
-    FavoritesModule
+    FavoritesModule,
+    ReviewsModule
   ],
   controllers: [RecipesController],
   providers: [RecipesService]

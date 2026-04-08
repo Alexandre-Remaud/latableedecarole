@@ -9,6 +9,7 @@ import type { Recipe } from "@recipes/contract"
 import { Route } from "@/routes/recipes/index"
 import { useAuth } from "@/features/auth/hooks"
 import FavoriteButton from "@/features/favorites/FavoriteButton"
+import ReviewSummary from "@/features/reviews/ReviewSummary"
 
 const LIMIT = 20
 
@@ -157,7 +158,16 @@ export default function Recipes() {
               </div>
 
               <div className="flex items-center justify-between mt-3">
-                <RecipeBadges recipe={recipe} />
+                <div className="flex items-center gap-3">
+                  <RecipeBadges recipe={recipe} />
+                  {(recipe.averageRating ?? 0) > 0 && (
+                    <ReviewSummary
+                      averageRating={recipe.averageRating ?? 0}
+                      ratingsCount={recipe.ratingsCount ?? 0}
+                      compact
+                    />
+                  )}
+                </div>
                 <FavoriteButton
                   recipeId={recipe._id}
                   initialFavorited={recipe.isFavorited ?? false}

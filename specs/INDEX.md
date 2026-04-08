@@ -27,12 +27,12 @@ Application de gestion de recettes de cuisine. Monorepo avec backend NestJS (Mon
 | Upload d'images                  | [image-upload.md](image-upload.md)         | done   |
 | Profil utilisateur               | [profile.md](profile.md)                   | done   |
 | Favoris                          | [favorites.md](favorites.md)               | done   |
+| Notation & Avis                  | [ratings.md](ratings.md)                   | done   |
 
 ### Priorité haute
 
 | Feature                          | Fichier                                    | Statut |
 | -------------------------------- | ------------------------------------------ | ------ |
-| Notation & Avis                  | [ratings.md](ratings.md)                   | todo   |
 
 ### Priorité moyenne
 
