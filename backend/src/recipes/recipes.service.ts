@@ -71,9 +71,9 @@ export class RecipesService {
     const safeLimit = Math.min(Math.max(1, limit), 100)
 
     const filter: Record<string, unknown> = {}
-    if (category) filter.category = category
+    if (category) filter.category = String(category)
     if (search) {
-      const escaped = search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+      const escaped = String(search).replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
       filter.title = { $regex: escaped, $options: "i" }
     }
     const [data, total] = await Promise.all([

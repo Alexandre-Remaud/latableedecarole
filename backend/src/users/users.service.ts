@@ -59,7 +59,7 @@ export class UsersService {
     if (dto.avatarUrl !== undefined) update.avatarUrl = dto.avatarUrl
 
     const user = await this.userModel
-      .findByIdAndUpdate(userId, update, { new: true })
+      .findByIdAndUpdate(userId, { $set: update }, { new: true })
       .select("-password -__v")
       .exec()
 
