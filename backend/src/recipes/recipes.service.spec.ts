@@ -7,6 +7,7 @@ import { CreateRecipeDto } from "./dto/create-recipe.dto"
 import { UpdateRecipeDto } from "./dto/update-recipe.dto"
 import { UploadService } from "../upload/upload.service"
 import { FavoritesService } from "../favorites/favorites.service"
+import { ReviewsService } from "../reviews/reviews.service"
 
 const VALID_ID = "507f1f77bcf86cd799439011"
 const INVALID_ID = "not-a-valid-id"
@@ -59,6 +60,10 @@ const mockFavoritesService = {
   deleteByRecipeId: jest.fn()
 }
 
+const mockReviewsService = {
+  deleteByRecipeId: jest.fn()
+}
+
 describe("RecipesService", () => {
   let service: RecipesService
 
@@ -77,6 +82,10 @@ describe("RecipesService", () => {
         {
           provide: FavoritesService,
           useValue: mockFavoritesService
+        },
+        {
+          provide: ReviewsService,
+          useValue: mockReviewsService
         }
       ]
     }).compile()
@@ -88,6 +97,7 @@ describe("RecipesService", () => {
     mockLimitFn.mockReset()
     mockFavoritesService.getFavoritesCount.mockResolvedValue(0)
     mockFavoritesService.isFavorited.mockResolvedValue(false)
+    mockReviewsService.deleteByRecipeId.mockResolvedValue(undefined)
   })
 
   describe("create", () => {
