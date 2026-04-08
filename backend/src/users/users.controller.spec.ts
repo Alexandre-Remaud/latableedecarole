@@ -1,10 +1,12 @@
 import { Test, TestingModule } from "@nestjs/testing"
 import { UsersController } from "./users.controller"
 import { UsersService } from "./users.service"
+import { FavoritesService } from "../favorites/favorites.service"
 
 describe("UsersController", () => {
   let controller: UsersController
   let usersService: Record<string, jest.Mock>
+  let favoritesService: Record<string, jest.Mock>
 
   beforeEach(async () => {
     usersService = {
@@ -15,9 +17,16 @@ describe("UsersController", () => {
       changePassword: jest.fn()
     }
 
+    favoritesService = {
+      getUserFavorites: jest.fn()
+    }
+
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UsersController],
-      providers: [{ provide: UsersService, useValue: usersService }]
+      providers: [
+        { provide: UsersService, useValue: usersService },
+        { provide: FavoritesService, useValue: favoritesService }
+      ]
     }).compile()
 
     controller = module.get<UsersController>(UsersController)

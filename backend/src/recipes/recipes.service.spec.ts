@@ -6,6 +6,7 @@ import { Recipe } from "./entities/recipe.entity"
 import { CreateRecipeDto } from "./dto/create-recipe.dto"
 import { UpdateRecipeDto } from "./dto/update-recipe.dto"
 import { UploadService } from "../upload/upload.service"
+import { FavoritesService } from "../favorites/favorites.service"
 
 const VALID_ID = "507f1f77bcf86cd799439011"
 const INVALID_ID = "not-a-valid-id"
@@ -47,6 +48,12 @@ const mockUploadService = {
   deleteByPublicId: jest.fn()
 }
 
+const mockFavoritesService = {
+  getFavoritesCount: jest.fn(),
+  isFavorited: jest.fn(),
+  deleteByRecipeId: jest.fn()
+}
+
 describe("RecipesService", () => {
   let service: RecipesService
 
@@ -61,6 +68,10 @@ describe("RecipesService", () => {
         {
           provide: UploadService,
           useValue: mockUploadService
+        },
+        {
+          provide: FavoritesService,
+          useValue: mockFavoritesService
         }
       ]
     }).compile()
@@ -146,15 +157,21 @@ describe("RecipesService", () => {
   })
 
   describe("findOne", () => {
-    it("should return a recipe by id", async () => {
+    it("should return a recipe by id with favorites data", async () => {
+      const recipeWithToObject = {
+        ...mockRecipe,
+        toObject: jest.fn().mockReturnValue(mockRecipe)
+      }
       mockRecipeModel.findById.mockReturnValue({
-        exec: jest.fn().mockResolvedValue(mockRecipe)
+        exec: jest.fn().mockResolvedValue(recipeWithToObject)
       })
+      mockFavoritesService.getFavoritesCount.mockResolvedValue(3)
+      mockFavoritesService.isFavorited.mockResolvedValue(false)
 
       const result = await service.findOne(VALID_ID)
 
       expect(mockRecipeModel.findById).toHaveBeenCalledWith(VALID_ID)
-      expect(result).toEqual(mockRecipe)
+      expect(result).toEqual({ ...mockRecipe, favoritesCount: 3, isFavorited: false })
     })
 
     it("should throw NotFoundException if recipe not found", async () => {
@@ -212,10 +229,12 @@ describe("RecipesService", () => {
       mockRecipeModel.findByIdAndDelete.mockReturnValue({
         exec: jest.fn().mockResolvedValue(mockRecipe)
       })
+      mockFavoritesService.deleteByRecipeId.mockResolvedValue(undefined)
 
       const result = await service.remove(VALID_ID)
 
       expect(mockRecipeModel.findByIdAndDelete).toHaveBeenCalledWith(VALID_ID)
+      expect(mockFavoritesService.deleteByRecipeId).toHaveBeenCalledWith(VALID_ID)
       expect(result).toEqual(mockRecipe)
     })
 
@@ -225,6 +244,7 @@ describe("RecipesService", () => {
         exec: jest.fn().mockResolvedValue(recipeWithImage)
       })
       mockUploadService.deleteByPublicId.mockResolvedValue(undefined)
+      mockFavoritesService.deleteByRecipeId.mockResolvedValue(undefined)
 
       await service.remove(VALID_ID)
 
@@ -237,6 +257,7 @@ describe("RecipesService", () => {
       mockRecipeModel.findByIdAndDelete.mockReturnValue({
         exec: jest.fn().mockResolvedValue(mockRecipe)
       })
+      mockFavoritesService.deleteByRecipeId.mockResolvedValue(undefined)
 
       await service.remove(VALID_ID)
 

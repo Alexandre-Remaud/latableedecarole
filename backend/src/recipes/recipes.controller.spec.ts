@@ -14,7 +14,9 @@ const mockRecipe = {
   description: "Une tarte classique",
   ingredients: [{ name: "Pommes", quantity: 4, unit: "pièces" }],
   steps: [{ order: 1, instruction: "Éplucher les pommes" }],
-  userId: USER_ID
+  userId: USER_ID,
+  favoritesCount: 0,
+  isFavorited: false
 }
 
 const paginatedResult = { data: [mockRecipe], total: 1 }
@@ -134,9 +136,9 @@ describe("RecipesController", () => {
     it("should delegate to service.findOne with the id", async () => {
       mockRecipesService.findOne.mockResolvedValue(mockRecipe)
 
-      const result = await controller.findOne(VALID_ID)
+      const result = await controller.findOne(VALID_ID, undefined)
 
-      expect(mockRecipesService.findOne).toHaveBeenCalledWith(VALID_ID)
+      expect(mockRecipesService.findOne).toHaveBeenCalledWith(VALID_ID, undefined)
       expect(result).toEqual(mockRecipe)
     })
   })
