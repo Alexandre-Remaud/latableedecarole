@@ -127,8 +127,19 @@ L'agent doit :
 
    Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>
    ```
-8. **Push** la branche : `git push -u origin feat/[nom-feature]`
-9. **Creer la PR** avec `gh pr create` :
+8. **Mettre a jour `specs/INDEX.md`** :
+   - Trouver la ligne de la feature implementee dans les tables de priorite
+   - Changer son statut de `todo` a `done`
+   - Deplacer la ligne dans la table "Existant (done)" (section `### Existant (done)`)
+   - Si la table de priorite source devient vide, la laisser avec juste le header
+   - Commiter :
+     ```
+     docs: mark [feature name] as done in specs index
+
+     Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>
+     ```
+9. **Push** la branche : `git push -u origin feat/[nom-feature]`
+10. **Creer la PR** avec `gh pr create` :
    ```
    gh pr create --title "feat([scope]): [feature name]" --body "$(cat <<'EOF'
    ## Summary
