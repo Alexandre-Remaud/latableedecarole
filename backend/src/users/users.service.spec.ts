@@ -134,9 +134,11 @@ describe("UsersService", () => {
       expect(userModel.findByIdAndUpdate).toHaveBeenCalledWith(
         mockUserId.toString(),
         {
-          name: "Bob",
-          bio: "New bio",
-          avatarUrl: "https://example.com/new.jpg"
+          $set: {
+            name: "Bob",
+            bio: "New bio",
+            avatarUrl: "https://example.com/new.jpg"
+          }
         },
         { new: true }
       )
