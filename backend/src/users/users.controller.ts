@@ -1,4 +1,5 @@
 import { Controller, Get, Patch, Body, Param, Query } from "@nestjs/common"
+import { Throttle } from "@nestjs/throttler"
 import { UsersService } from "./users.service"
 import { UpdateProfileDto } from "./dto/update-profile.dto"
 import { ChangeEmailDto } from "./dto/change-email.dto"
@@ -55,11 +56,13 @@ export class UsersController {
     return this.usersService.updateProfile(userId, dto)
   }
 
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Patch("me/email")
   changeEmail(@CurrentUser("sub") userId: string, @Body() dto: ChangeEmailDto) {
     return this.usersService.changeEmail(userId, dto)
   }
 
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @Patch("me/password")
   changePassword(
     @CurrentUser("sub") userId: string,
