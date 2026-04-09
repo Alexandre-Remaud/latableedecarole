@@ -6,8 +6,11 @@ import * as crypto from "node:crypto"
 import sharp from "sharp"
 import type { StorageService, StorageResult } from "./storage.interface.js"
 
+sharp.concurrency(1)
+
 const THUMBNAIL_SIZE = { width: 300, height: 300 }
 const MEDIUM_SIZE = { width: 800, height: 600 }
+const MAX_ORIGINAL_WIDTH = 1920
 
 @Injectable()
 export class LocalStorageService implements StorageService {
@@ -34,19 +37,24 @@ export class LocalStorageService implements StorageService {
     const thumbnailName = `${publicId}-thumbnail${ext}`
     const mediumName = `${publicId}-medium${ext}`
 
-    const image = sharp(buffer).rotate()
+    // Process sequentially to limit memory usage
+    await sharp(buffer)
+      .rotate()
+      .resize(MAX_ORIGINAL_WIDTH, undefined, {
+        fit: "inside",
+        withoutEnlargement: true
+      })
+      .toFile(path.join(this.uploadDir, originalName))
 
-    await Promise.all([
-      image.clone().toFile(path.join(this.uploadDir, originalName)),
-      image
-        .clone()
-        .resize(THUMBNAIL_SIZE.width, THUMBNAIL_SIZE.height, { fit: "cover" })
-        .toFile(path.join(this.uploadDir, thumbnailName)),
-      image
-        .clone()
-        .resize(MEDIUM_SIZE.width, MEDIUM_SIZE.height, { fit: "inside" })
-        .toFile(path.join(this.uploadDir, mediumName))
-    ])
+    await sharp(buffer)
+      .rotate()
+      .resize(THUMBNAIL_SIZE.width, THUMBNAIL_SIZE.height, { fit: "cover" })
+      .toFile(path.join(this.uploadDir, thumbnailName))
+
+    await sharp(buffer)
+      .rotate()
+      .resize(MEDIUM_SIZE.width, MEDIUM_SIZE.height, { fit: "inside" })
+      .toFile(path.join(this.uploadDir, mediumName))
 
     return {
       originalUrl: `${this.baseUrl}/${originalName}`,

@@ -9,8 +9,11 @@ import * as crypto from "node:crypto"
 import sharp from "sharp"
 import type { StorageService, StorageResult } from "./storage.interface.js"
 
+sharp.concurrency(1)
+
 const THUMBNAIL_SIZE = { width: 300, height: 300 }
 const MEDIUM_SIZE = { width: 800, height: 600 }
+const MAX_ORIGINAL_WIDTH = 1920
 
 @Injectable()
 export class S3StorageService implements StorageService {
@@ -42,42 +45,55 @@ export class S3StorageService implements StorageService {
     const ext = this.getExtension(mimetype)
     const publicId = crypto.randomUUID()
 
-    const image = sharp(buffer).rotate()
-
-    const [originalBuf, thumbnailBuf, mediumBuf] = await Promise.all([
-      image.clone().toBuffer(),
-      image
-        .clone()
-        .resize(THUMBNAIL_SIZE.width, THUMBNAIL_SIZE.height, { fit: "cover" })
-        .toBuffer(),
-      image
-        .clone()
-        .resize(MEDIUM_SIZE.width, MEDIUM_SIZE.height, { fit: "inside" })
-        .toBuffer()
-    ])
-
     const keys = {
       original: `${publicId}-original${ext}`,
       thumbnail: `${publicId}-thumbnail${ext}`,
       medium: `${publicId}-medium${ext}`
     }
 
-    await Promise.all(
-      Object.entries(keys).map(([, key]) => {
-        const body =
-          key === keys.original
-            ? originalBuf
-            : key === keys.thumbnail
-              ? thumbnailBuf
-              : mediumBuf
-        return this.s3.send(
-          new PutObjectCommand({
-            Bucket: this.bucket,
-            Key: key,
-            Body: body,
-            ContentType: mimetype
-          })
-        )
+    // Process and upload sequentially to limit memory usage
+    const originalBuf = await sharp(buffer)
+      .rotate()
+      .resize(MAX_ORIGINAL_WIDTH, undefined, {
+        fit: "inside",
+        withoutEnlargement: true
+      })
+      .toBuffer()
+
+    await this.s3.send(
+      new PutObjectCommand({
+        Bucket: this.bucket,
+        Key: keys.original,
+        Body: originalBuf,
+        ContentType: mimetype
+      })
+    )
+
+    const thumbnailBuf = await sharp(buffer)
+      .rotate()
+      .resize(THUMBNAIL_SIZE.width, THUMBNAIL_SIZE.height, { fit: "cover" })
+      .toBuffer()
+
+    await this.s3.send(
+      new PutObjectCommand({
+        Bucket: this.bucket,
+        Key: keys.thumbnail,
+        Body: thumbnailBuf,
+        ContentType: mimetype
+      })
+    )
+
+    const mediumBuf = await sharp(buffer)
+      .rotate()
+      .resize(MEDIUM_SIZE.width, MEDIUM_SIZE.height, { fit: "inside" })
+      .toBuffer()
+
+    await this.s3.send(
+      new PutObjectCommand({
+        Bucket: this.bucket,
+        Key: keys.medium,
+        Body: mediumBuf,
+        ContentType: mimetype
       })
     )
 
