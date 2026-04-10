@@ -75,12 +75,14 @@ export default function Home() {
       {recipes.length === 0 ? (
         <div className="text-center py-8">
           <p className="text-gray-500 mb-4">Aucune recette pour le moment.</p>
-          <Link
-            to="/recipes/add"
-            className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-white bg-warm-600 rounded-xl hover:bg-warm-700 transition-colors"
-          >
-            Ajouter une recette
-          </Link>
+          {user && (
+            <Link
+              to="/recipes/add"
+              className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-white bg-warm-600 rounded-xl hover:bg-warm-700 transition-colors"
+            >
+              Ajouter une recette
+            </Link>
+          )}
         </div>
       ) : (
         <>
