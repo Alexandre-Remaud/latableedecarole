@@ -16,6 +16,6 @@ export class UpdateProfileDto {
   bio?: string
 
   @IsOptional()
-  @IsUrl({}, { message: "L'URL de l'avatar est invalide" })
+  @IsUrl({ require_tld: false }, { message: "L'URL de l'avatar est invalide" })
   avatarUrl?: string
 }
