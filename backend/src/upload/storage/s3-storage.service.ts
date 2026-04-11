@@ -52,50 +52,70 @@ export class S3StorageService implements StorageService {
     }
 
     // Process and upload sequentially to limit memory usage
-    const originalBuf = await sharp(buffer)
-      .rotate()
-      .resize(MAX_ORIGINAL_WIDTH, undefined, {
-        fit: "inside",
-        withoutEnlargement: true
-      })
-      .toBuffer()
+    const uploadedKeys: string[] = []
 
-    await this.s3.send(
-      new PutObjectCommand({
-        Bucket: this.bucket,
-        Key: keys.original,
-        Body: originalBuf,
-        ContentType: mimetype
-      })
-    )
+    try {
+      const originalBuf = await sharp(buffer)
+        .rotate()
+        .resize(MAX_ORIGINAL_WIDTH, undefined, {
+          fit: "inside",
+          withoutEnlargement: true
+        })
+        .toBuffer()
 
-    const thumbnailBuf = await sharp(buffer)
-      .rotate()
-      .resize(THUMBNAIL_SIZE.width, THUMBNAIL_SIZE.height, { fit: "cover" })
-      .toBuffer()
+      await this.s3.send(
+        new PutObjectCommand({
+          Bucket: this.bucket,
+          Key: keys.original,
+          Body: originalBuf,
+          ContentType: mimetype
+        })
+      )
+      uploadedKeys.push(keys.original)
 
-    await this.s3.send(
-      new PutObjectCommand({
-        Bucket: this.bucket,
-        Key: keys.thumbnail,
-        Body: thumbnailBuf,
-        ContentType: mimetype
-      })
-    )
+      const thumbnailBuf = await sharp(buffer)
+        .rotate()
+        .resize(THUMBNAIL_SIZE.width, THUMBNAIL_SIZE.height, { fit: "cover" })
+        .toBuffer()
 
-    const mediumBuf = await sharp(buffer)
-      .rotate()
-      .resize(MEDIUM_SIZE.width, MEDIUM_SIZE.height, { fit: "inside" })
-      .toBuffer()
+      await this.s3.send(
+        new PutObjectCommand({
+          Bucket: this.bucket,
+          Key: keys.thumbnail,
+          Body: thumbnailBuf,
+          ContentType: mimetype
+        })
+      )
+      uploadedKeys.push(keys.thumbnail)
 
-    await this.s3.send(
-      new PutObjectCommand({
-        Bucket: this.bucket,
-        Key: keys.medium,
-        Body: mediumBuf,
-        ContentType: mimetype
-      })
-    )
+      const mediumBuf = await sharp(buffer)
+        .rotate()
+        .resize(MEDIUM_SIZE.width, MEDIUM_SIZE.height, { fit: "inside" })
+        .toBuffer()
+
+      await this.s3.send(
+        new PutObjectCommand({
+          Bucket: this.bucket,
+          Key: keys.medium,
+          Body: mediumBuf,
+          ContentType: mimetype
+        })
+      )
+      uploadedKeys.push(keys.medium)
+    } catch (err) {
+      if (uploadedKeys.length > 0) {
+        await this.s3.send(
+          new DeleteObjectsCommand({
+            Bucket: this.bucket,
+            Delete: {
+              Objects: uploadedKeys.map((Key) => ({ Key })),
+              Quiet: true
+            }
+          })
+        )
+      }
+      throw err
+    }
 
     return {
       originalUrl: `${this.publicUrl}/${keys.original}`,
