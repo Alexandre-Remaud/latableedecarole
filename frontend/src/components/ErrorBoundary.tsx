@@ -66,6 +66,7 @@ export default class ErrorBoundary extends Component<
               Une erreur inattendue est survenue. Veuillez réessayer.
             </p>
             <button
+              type="button"
               onClick={this.handleReset}
               className="px-6 py-3 bg-warm-600 text-white rounded-xl hover:bg-warm-700 active:bg-warm-800 transition-colors font-medium"
             >
