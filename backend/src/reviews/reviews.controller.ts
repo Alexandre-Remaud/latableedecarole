@@ -16,6 +16,7 @@ import { UpdateReviewDto } from "./dto/update-review.dto"
 import { GetReviewsDto } from "./dto/get-reviews.dto"
 import { CurrentUser } from "../auth/decorators/current-user.decorator"
 import { Public } from "../auth/decorators/public.decorator"
+import { Role } from "../auth/role.enum"
 
 @Controller()
 export class ReviewsController {
@@ -44,7 +45,7 @@ export class ReviewsController {
   deleteReview(
     @Param("id") reviewId: string,
     @CurrentUser("sub") userId: string,
-    @CurrentUser("role") role: string
+    @CurrentUser("role") role: Role
   ) {
     return this.reviewsService.deleteReview(userId, role, reviewId)
   }

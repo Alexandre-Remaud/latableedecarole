@@ -85,7 +85,7 @@ export class ReviewsService {
     return review
   }
 
-  async deleteReview(userId: string, role: string, reviewId: string) {
+  async deleteReview(userId: string, role: Role, reviewId: string) {
     this.validateObjectId(reviewId)
 
     const review = await this.reviewModel.findById(reviewId).exec()
