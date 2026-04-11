@@ -71,11 +71,14 @@ export default function StepField({
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <div>
-            <label className="label-field">Durée</label>
+            <label htmlFor={`duration-${index}`} className="label-field">
+              Durée
+            </label>
             <input
               {...register(`steps.${index}.duration`, {
                 setValueAs: (v) => (v === "" ? undefined : Number(v))
               })}
+              id={`duration-${index}`}
               className="input-field"
               type="number"
               placeholder="--"
@@ -89,9 +92,12 @@ export default function StepField({
           </div>
 
           <div>
-            <label className="label-field">Unité</label>
+            <label htmlFor={`durationUnit-${index}`} className="label-field">
+              Unité
+            </label>
             <select
               {...register(`steps.${index}.durationUnit`)}
+              id={`durationUnit-${index}`}
               disabled={!duration || duration === 0}
               className="select-field disabled:bg-gray-50 disabled:text-gray-400 disabled:cursor-not-allowed"
               aria-label={`Unité de durée de l'étape ${stepNumber}`}
@@ -102,11 +108,14 @@ export default function StepField({
           </div>
 
           <div>
-            <label className="label-field">Température</label>
+            <label htmlFor={`temperature-${index}`} className="label-field">
+              Température
+            </label>
             <input
               {...register(`steps.${index}.temperature`, {
                 setValueAs: (v) => (v === "" ? undefined : Number(v))
               })}
+              id={`temperature-${index}`}
               className="input-field"
               type="number"
               placeholder="--"
@@ -120,9 +129,12 @@ export default function StepField({
           </div>
 
           <div>
-            <label className="label-field">Unité</label>
+            <label htmlFor={`temperatureUnit-${index}`} className="label-field">
+              Unité
+            </label>
             <select
               {...register(`steps.${index}.temperatureUnit`)}
+              id={`temperatureUnit-${index}`}
               disabled={!temperature || temperature === 0}
               className="select-field disabled:bg-gray-50 disabled:text-gray-400 disabled:cursor-not-allowed"
               aria-label={`Unité de température de l'étape ${stepNumber}`}
@@ -134,9 +146,12 @@ export default function StepField({
         </div>
 
         <div>
-          <label className="label-field">Note (optionnel)</label>
+          <label htmlFor={`note-${index}`} className="label-field">
+            Note (optionnel)
+          </label>
           <input
             {...register(`steps.${index}.note`)}
+            id={`note-${index}`}
             className="input-field"
             type="text"
             placeholder="Astuce ou conseil..."
