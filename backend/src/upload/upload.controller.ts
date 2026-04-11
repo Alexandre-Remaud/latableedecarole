@@ -21,7 +21,20 @@ export class UploadController {
   @Post("image")
   @UseInterceptors(
     FileInterceptor("file", {
-      limits: { fileSize: 5 * 1024 * 1024 }
+      limits: { fileSize: 5 * 1024 * 1024 },
+      fileFilter: (_req, file, cb) => {
+        const allowed = ["image/jpeg", "image/png", "image/webp"]
+        if (allowed.includes(file.mimetype)) {
+          cb(null, true)
+        } else {
+          cb(
+            new BadRequestException(
+              "Format de fichier non supporté. Utilisez JPEG, PNG ou WebP."
+            ),
+            false
+          )
+        }
+      }
     })
   )
   async uploadImage(
