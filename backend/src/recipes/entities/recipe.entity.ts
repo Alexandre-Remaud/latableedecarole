@@ -94,7 +94,7 @@ export class Recipe {
   })
   category?: string
 
-  @Prop({ type: Types.ObjectId, ref: "User", required: true })
+  @Prop({ type: Types.ObjectId, ref: "User", required: true, index: true })
   userId: Types.ObjectId
 
   @Prop({ default: 0 })

@@ -122,12 +122,12 @@ export class RecipesService {
   async update(id: string, updateRecipeDto: UpdateRecipeDto) {
     this.validateObjectId(id)
     const sanitized = this.sanitizeUpdateDto(updateRecipeDto)
-    const recipe = await this.recipeModel
-      .findByIdAndUpdate(id, sanitized, { new: true })
-      .exec()
+    const recipe = await this.recipeModel.findById(id).exec()
     if (!recipe) {
       throw new NotFoundException("Recipe not found")
     }
+    Object.assign(recipe, sanitized)
+    await recipe.save()
     return recipe
   }
 
