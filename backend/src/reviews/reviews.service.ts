@@ -12,6 +12,7 @@ import { Recipe } from "../recipes/entities/recipe.entity"
 import { User } from "../users/entities/user.entity"
 import { CreateReviewDto } from "./dto/create-review.dto"
 import { UpdateReviewDto } from "./dto/update-review.dto"
+import { Role } from "../auth/role.enum"
 
 @Injectable()
 export class ReviewsService {
@@ -92,7 +93,7 @@ export class ReviewsService {
       throw new NotFoundException("Review not found")
     }
 
-    if (review.userId.toString() !== userId && role !== "admin") {
+    if (review.userId.toString() !== userId && role !== Role.ADMIN) {
       throw new ForbiddenException("You can only delete your own reviews")
     }
 

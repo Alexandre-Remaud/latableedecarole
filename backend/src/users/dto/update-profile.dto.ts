@@ -1,8 +1,17 @@
-import { IsString, IsOptional, MaxLength, IsUrl } from "class-validator"
+import {
+  IsString,
+  IsOptional,
+  MaxLength,
+  MinLength,
+  IsUrl
+} from "class-validator"
 
 export class UpdateProfileDto {
   @IsOptional()
   @IsString()
+  @MinLength(2, {
+    message: "Le nom doit contenir au moins 2 caractères"
+  })
   @MaxLength(100, {
     message: "Le nom ne doit pas dépasser 100 caractères"
   })

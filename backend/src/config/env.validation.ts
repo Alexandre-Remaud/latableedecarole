@@ -2,7 +2,7 @@ import { z } from "zod"
 
 const envSchema = z.object({
   MONGO_URI: z.string().min(1, "MONGO_URI is required"),
-  MONGO_DB_NAME: z.string().default("chezcarole_dev"),
+  MONGO_DB_NAME: z.string().default("latableedecarole_dev"),
   PORT: z
     .string()
     .default("3000")

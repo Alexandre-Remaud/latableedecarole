@@ -55,8 +55,8 @@ export class ReviewsController {
     @Param("id") recipeId: string,
     @Query() query: GetReviewsDto
   ) {
-    const skip = query.skip ? parseInt(query.skip) : 0
-    const limit = query.limit ? parseInt(query.limit) : 20
+    const skip = query.skip ? parseInt(query.skip, 10) : 0
+    const limit = query.limit ? parseInt(query.limit, 10) : 20
     return this.reviewsService.getRecipeReviews(recipeId, skip, limit)
   }
 }
