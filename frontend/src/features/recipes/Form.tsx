@@ -11,8 +11,16 @@ interface FormProps {
 }
 
 export default function Form({ recipeId }: FormProps) {
-  const { form, ingredients, steps, onSubmit, isLoading, isEditMode, addIngredient, addStep } =
-    useRecipeForm(recipeId)
+  const {
+    form,
+    ingredients,
+    steps,
+    onSubmit,
+    isLoading,
+    isEditMode,
+    addIngredient,
+    addStep
+  } = useRecipeForm(recipeId)
   const {
     register,
     control,
@@ -85,7 +93,7 @@ export default function Form({ recipeId }: FormProps) {
             </div>
 
             <div>
-              <label className="label-field">Photo</label>
+              <span className="label-field">Photo</span>
               <ImageUpload
                 value={imageField.field.value}
                 onChange={imageField.field.onChange}
