@@ -1,7 +1,7 @@
 # Notation & Avis
 
 ## Statut
-todo
+done
 
 ## Description
 Système de notation et d'avis permettant aux utilisateurs de noter les recettes (1 à 5 étoiles) et de laisser un commentaire. La note moyenne est affichée sur chaque recette pour aider les visiteurs à identifier les meilleures recettes.

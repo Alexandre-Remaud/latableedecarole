@@ -1,0 +1,38 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path' | { read -r f; if [[ \"$f\" == */.env || \"$f\" == */.env.* ]]; then echo '{\"decision\":\"block\",\"reason\":\"Bloqué : modification des fichiers .env interdite\"}'; exit 2; fi; }",
+            "statusMessage": "Vérification fichiers sensibles..."
+          },
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path' | { read -r f; if [[ \"$f\" == *pnpm-lock.yaml || \"$f\" == *package-lock.json || \"$f\" == *yarn.lock ]]; then echo '{\"decision\":\"block\",\"reason\":\"Bloqué : édition directe du lock file interdite — utilise pnpm install\"}'; exit 2; fi; }",
+            "statusMessage": "Vérification lock files..."
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path' | { read -r f; [[ \"$f\" == *.ts || \"$f\" == *.tsx ]] || exit 0; if [[ \"$f\" == */backend/* ]]; then cd /Users/alexandreremaud/Work/latableedecarole/backend && pnpm exec prettier --write \"$f\" 2>/dev/null; elif [[ \"$f\" == */frontend/* ]]; then cd /Users/alexandreremaud/Work/latableedecarole/frontend && pnpm exec prettier --write \"$f\" 2>/dev/null; fi; true; }",
+            "statusMessage": "Formatage Prettier..."
+          },
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path' | { read -r f; [[ \"$f\" == */backend/src/*.ts ]] || exit 0; cd /Users/alexandreremaud/Work/latableedecarole/backend && pnpm exec eslint --fix \"$f\" 2>/dev/null || true; }",
+            "statusMessage": "ESLint backend..."
+          }
+        ]
+      }
+    ]
+  }
+}

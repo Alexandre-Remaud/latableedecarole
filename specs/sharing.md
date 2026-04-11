@@ -1,7 +1,7 @@
 # Partage & Liens publics
 
 ## Statut
-todo
+done
 
 ## Description
 Fonctionnalité de partage de recettes via des liens avec preview OpenGraph pour un affichage riche sur les réseaux sociaux et messageries. Chaque recette a une URL publique avec des métadonnées optimisées pour le partage.

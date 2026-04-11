@@ -1,7 +1,7 @@
 # Favoris
 
 ## Statut
-todo
+done
 
 ## Description
 Système de favoris permettant aux utilisateurs connectés de sauvegarder des recettes qu'ils aiment. Les favoris sont visibles sur le profil de l'utilisateur et permettent de retrouver facilement les recettes appréciées.

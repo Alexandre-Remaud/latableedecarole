@@ -1,7 +1,7 @@
 # Upload d'images
 
 ## Statut
-todo
+done
 
 ## Description
 Système d'upload d'images pour les recettes et les avatars utilisateurs. Les images sont stockées sur un service externe (S3 ou Cloudinary) avec génération de thumbnails pour optimiser l'affichage. Remplace le champ `imageUrl` manuel par un vrai upload.

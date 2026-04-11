@@ -1,7 +1,7 @@
 # Profil utilisateur
 
 ## Statut
-todo
+done
 
 ## Description
 Page de profil permettant à un utilisateur de consulter et modifier ses informations personnelles, de voir ses recettes publiées et ses favoris. Chaque utilisateur a un profil public (visible par tous) et des paramètres privés (modifiables uniquement par lui).
