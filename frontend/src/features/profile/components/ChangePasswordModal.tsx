@@ -86,7 +86,7 @@ export default function ChangePasswordModal({ onSave, onClose }: Props) {
               type="password"
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
-              className="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-warm-300 focus:border-warm-400"
+              className="input-field"
             />
             {errors.currentPassword && (
               <p className="mt-1 text-xs text-red-500">
@@ -107,7 +107,7 @@ export default function ChangePasswordModal({ onSave, onClose }: Props) {
               type="password"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              className="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-warm-300 focus:border-warm-400"
+              className="input-field"
             />
             {errors.newPassword && (
               <p className="mt-1 text-xs text-red-500">{errors.newPassword}</p>
@@ -126,7 +126,7 @@ export default function ChangePasswordModal({ onSave, onClose }: Props) {
               type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-warm-300 focus:border-warm-400"
+              className="input-field"
             />
             {errors.confirmPassword && (
               <p className="mt-1 text-xs text-red-500">

@@ -89,7 +89,7 @@ export default function EditProfileModal({ user, onSave, onClose }: Props) {
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-warm-300 focus:border-warm-400"
+              className="input-field"
             />
             {errors.name && (
               <p className="mt-1 text-xs text-red-500">{errors.name}</p>
@@ -109,7 +109,7 @@ export default function EditProfileModal({ user, onSave, onClose }: Props) {
               onChange={(e) => setBio(e.target.value)}
               rows={3}
               maxLength={500}
-              className="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-warm-300 focus:border-warm-400 resize-none"
+              className="input-field resize-none"
             />
             <p className="text-xs text-gray-400 text-right">{bio.length}/500</p>
             {errors.bio && (
@@ -130,7 +130,7 @@ export default function EditProfileModal({ user, onSave, onClose }: Props) {
               value={avatarUrl}
               onChange={(e) => setAvatarUrl(e.target.value)}
               placeholder="https://example.com/avatar.jpg"
-              className="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-warm-300 focus:border-warm-400"
+              className="input-field"
             />
             {errors.avatarUrl && (
               <p className="mt-1 text-xs text-red-500">{errors.avatarUrl}</p>

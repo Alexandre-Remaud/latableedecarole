@@ -78,7 +78,7 @@ export default function ChangeEmailModal({ onSave, onClose }: Props) {
               type="email"
               value={newEmail}
               onChange={(e) => setNewEmail(e.target.value)}
-              className="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-warm-300 focus:border-warm-400"
+              className="input-field"
             />
             {errors.newEmail && (
               <p className="mt-1 text-xs text-red-500">{errors.newEmail}</p>
@@ -97,7 +97,7 @@ export default function ChangeEmailModal({ onSave, onClose }: Props) {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-warm-300 focus:border-warm-400"
+              className="input-field"
             />
             {errors.password && (
               <p className="mt-1 text-xs text-red-500">{errors.password}</p>
