@@ -1,7 +1,5 @@
 import { useShare } from "./useShare"
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000"
-
 interface ShareButtonProps {
   recipeTitle: string
   recipeDescription: string
@@ -13,7 +11,7 @@ export default function ShareButton({
   recipeDescription,
   recipeId
 }: ShareButtonProps) {
-  const url = `${API_URL}/recipes/${recipeId}/og`
+  const url = `${window.location.origin}/recipes/${recipeId}`
   const { share } = useShare(recipeTitle, recipeDescription, url)
 
   return (
