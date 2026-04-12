@@ -195,6 +195,27 @@ export default function Layout() {
                   {user ? (
                     <>
                       <Link
+                        to="/shopping-lists"
+                        className="shrink-0 p-2 text-gray-500 hover:text-warm-600 border border-gray-200 hover:border-warm-300 rounded-xl transition-colors"
+                        aria-label="Mes listes de courses"
+                        title="Mes listes de courses"
+                      >
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
+                          <path d="M3 6h18" />
+                          <path d="M16 10a4 4 0 0 1-8 0" />
+                        </svg>
+                      </Link>
+                      <Link
                         to="/recipes/add"
                         className="shrink-0 inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-warm-600 rounded-xl hover:bg-warm-700 active:bg-warm-800 transition-colors"
                       >
@@ -421,6 +442,13 @@ export default function Layout() {
                           className="px-4 py-2.5 text-sm font-medium text-gray-700 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors text-center"
                         >
                           Mon profil
+                        </Link>
+                        <Link
+                          to="/shopping-lists"
+                          onClick={closeAll}
+                          className="px-4 py-2.5 text-sm font-medium text-gray-700 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors text-center"
+                        >
+                          Listes de courses
                         </Link>
                         <button
                           type="button"

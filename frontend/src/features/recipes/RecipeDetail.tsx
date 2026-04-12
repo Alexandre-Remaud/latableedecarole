@@ -9,6 +9,7 @@ import type { Recipe } from "@recipes/contract"
 import { useAuth } from "@/features/auth/hooks"
 import FavoriteButton from "@/features/favorites/FavoriteButton"
 import ShareButton from "@/features/sharing/ShareButton"
+import AddToListButton from "@/features/shopping-lists/AddToListButton"
 import RecipeHead from "@/features/sharing/RecipeHead"
 import ReviewSummary from "@/features/reviews/ReviewSummary"
 import ReviewForm from "@/features/reviews/ReviewForm"
@@ -154,6 +155,13 @@ export default function RecipeDetail() {
           {recipe.title}
         </h1>
         <div className="flex items-center gap-2">
+          <AddToListButton
+            recipe={{
+              _id: recipe._id,
+              title: recipe.title,
+              servings: recipe.servings
+            }}
+          />
           <ShareButton
             recipeId={recipe._id}
             recipeTitle={recipe.title}
