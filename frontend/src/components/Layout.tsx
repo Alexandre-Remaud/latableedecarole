@@ -84,11 +84,10 @@ export default function Layout() {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 >
-                  <path d="M15 11h.01" />
-                  <path d="M11 15h.01" />
-                  <path d="M16 16h.01" />
-                  <path d="m2 16 20 6-6-20A20 20 0 0 0 2 16" />
-                  <path d="M5.71 17.11a17.04 17.04 0 0 1 11.4-11.4" />
+                  <path d="M2 12h20" />
+                  <path d="M20 12v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8" />
+                  <path d="m4 8 16-4" />
+                  <path d="m8.86 6.78-.45-1.81a2 2 0 0 1 1.45-2.43l1.94-.48a2 2 0 0 1 2.43 1.46l.45 1.8" />
                 </svg>
               </span>
               <span className="font-display text-lg font-bold text-gray-800 leading-tight">

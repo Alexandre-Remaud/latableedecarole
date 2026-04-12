@@ -109,7 +109,7 @@ export default function Home() {
                   params={{ id: recipe._id }}
                   className="block"
                 >
-                  <div className="relative aspect-4/3 bg-warm-50 overflow-hidden">
+                  <div className="relative aspect-4/3 bg-warm-100 overflow-hidden">
                     {recipe.imageThumbnailUrl ? (
                       <img
                         src={recipe.imageThumbnailUrl}
@@ -130,11 +130,10 @@ export default function Home() {
                           strokeLinejoin="round"
                           className="text-warm-300"
                         >
-                          <path d="M15 11h.01" />
-                          <path d="M11 15h.01" />
-                          <path d="M16 16h.01" />
-                          <path d="m2 16 20 6-6-20A20 20 0 0 0 2 16" />
-                          <path d="M5.71 17.11a17.04 17.04 0 0 1 11.4-11.4" />
+                          <path d="M2 12h20" />
+                          <path d="M20 12v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8" />
+                          <path d="m4 8 16-4" />
+                          <path d="m8.86 6.78-.45-1.81a2 2 0 0 1 1.45-2.43l1.94-.48a2 2 0 0 1 2.43 1.46l.45 1.8" />
                         </svg>
                       </div>
                     )}
@@ -150,7 +149,7 @@ export default function Home() {
                   </div>
                 </Link>
 
-                <div className="absolute top-2.5 right-2.5 bg-white/90 rounded-full px-2 py-1 shadow-sm">
+                <div className="absolute top-2.5 right-2.5 flex items-center bg-white/90 rounded-full px-2 py-1 shadow-sm">
                   <FavoriteButton
                     recipeId={recipe._id}
                     initialFavorited={recipe.isFavorited ?? false}
@@ -163,12 +162,12 @@ export default function Home() {
                     <button
                       type="button"
                       onClick={() => setDeletingId(recipe._id)}
-                      className="absolute top-2.5 left-2.5 p-1.5 bg-white/90 rounded-full shadow-sm text-gray-400 hover:text-red-500 transition-colors"
+                      className="absolute top-2.5 left-2.5 flex items-center px-2 py-1 bg-white/90 rounded-full shadow-sm text-gray-400 hover:text-red-500 transition-colors"
                       aria-label={`Supprimer ${recipe.title}`}
                     >
                       <svg
-                        width="14"
-                        height="14"
+                        width="16"
+                        height="16"
                         viewBox="0 0 24 24"
                         fill="none"
                         stroke="currentColor"

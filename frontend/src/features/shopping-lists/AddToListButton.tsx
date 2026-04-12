@@ -25,7 +25,7 @@ export default function AddToListButton({ recipe }: Props) {
       <button
         type="button"
         onClick={handleClick}
-        className="inline-flex items-center gap-1.5 px-3 py-2 text-sm text-gray-500 hover:text-warm-600 border border-gray-200 hover:border-warm-300 rounded-xl transition-colors"
+        className="inline-flex items-center gap-1 text-sm text-gray-400 hover:text-warm-600 cursor-pointer transition-colors"
         aria-label="Ajouter à une liste de courses"
         title={
           !user
