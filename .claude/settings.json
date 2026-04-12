@@ -23,24 +23,24 @@
         "hooks": [
           {
             "type": "command",
-            "command": "jq -r '.tool_input.file_path' | { read -r f; [[ \"$f\" == *.ts || \"$f\" == *.tsx ]] || exit 0; if [[ \"$f\" == */backend/* ]]; then cd /Users/alexandreremaud/Work/latableedecarole/backend && pnpm exec prettier --write \"$f\" 2>/dev/null; elif [[ \"$f\" == */frontend/* ]]; then cd /Users/alexandreremaud/Work/latableedecarole/frontend && pnpm exec prettier --write \"$f\" 2>/dev/null; fi; true; }",
+            "command": "jq -r '.tool_input.file_path' | { read -r f; [[ \"$f\" == *.ts || \"$f\" == *.tsx ]] || exit 0; [[ \"$f\" == */backend/* ]] && DIR=backend || DIR=frontend; cd /Users/alexandreremaud/Work/latableedecarole/$DIR && pnpm exec prettier --write \"$f\" 2>/dev/null; true; }",
             "statusMessage": "Formatage Prettier..."
           },
           {
             "type": "command",
-            "command": "jq -r '.tool_input.file_path' | { read -r f; [[ \"$f\" == *.ts || \"$f\" == *.tsx ]] || exit 0; if [[ \"$f\" == */backend/* ]]; then cd /Users/alexandreremaud/Work/latableedecarole/backend && pnpm exec eslint --fix \"$f\" 2>/dev/null || true; elif [[ \"$f\" == */frontend/* ]]; then cd /Users/alexandreremaud/Work/latableedecarole/frontend && pnpm exec eslint --fix \"$f\" 2>/dev/null || true; fi; }",
+            "command": "jq -r '.tool_input.file_path' | { read -r f; [[ \"$f\" == *.ts || \"$f\" == *.tsx ]] || exit 0; [[ \"$f\" == */backend/* ]] && DIR=backend || DIR=frontend; cd /Users/alexandreremaud/Work/latableedecarole/$DIR && pnpm exec eslint --fix \"$f\" 2>/dev/null || true; }",
             "statusMessage": "ESLint..."
           },
           {
             "type": "command",
-            "command": "jq -r '.tool_input.file_path' | { read -r f; [[ \"$f\" == *.ts || \"$f\" == *.tsx ]] || exit 0; if [[ \"$f\" == */backend/* ]]; then cd /Users/alexandreremaud/Work/latableedecarole/backend && npx tsc --noEmit 2>&1 | tail -5 || true; elif [[ \"$f\" == */frontend/* ]]; then cd /Users/alexandreremaud/Work/latableedecarole/frontend && npx tsc --noEmit 2>&1 | tail -5 || true; fi; }",
+            "command": "jq -r '.tool_input.file_path' | { read -r f; [[ \"$f\" == *.ts || \"$f\" == *.tsx ]] || exit 0; [[ \"$f\" == */backend/* ]] && DIR=backend || DIR=frontend; cd /Users/alexandreremaud/Work/latableedecarole/$DIR && pnpm typecheck 2>&1 | tail -5 || true; }",
             "statusMessage": "TypeCheck...",
             "async": true,
             "timeout": 60
           },
           {
             "type": "command",
-            "command": "jq -r '.tool_input.file_path' | { read -r f; [[ \"$f\" == *.ts || \"$f\" == *.tsx ]] || exit 0; if [[ \"$f\" == */backend/* ]]; then cd /Users/alexandreremaud/Work/latableedecarole/backend && pnpm test 2>&1 | tail -10 || true; elif [[ \"$f\" == */frontend/* ]]; then cd /Users/alexandreremaud/Work/latableedecarole/frontend && pnpm test 2>&1 | tail -10 || true; fi; }",
+            "command": "jq -r '.tool_input.file_path' | { read -r f; [[ \"$f\" == *.ts || \"$f\" == *.tsx ]] || exit 0; [[ \"$f\" == */backend/* ]] && DIR=backend || DIR=frontend; cd /Users/alexandreremaud/Work/latableedecarole/$DIR && pnpm test 2>&1 | tail -10 || true; }",
             "statusMessage": "Tests...",
             "async": true,
             "timeout": 120
