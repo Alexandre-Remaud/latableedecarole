@@ -2,11 +2,15 @@
   "name": "chez-carole",
   "private": true,
   "pnpm": {
-    "onlyBuiltDependencies": ["sharp"]
+    "onlyBuiltDependencies": [
+      "sharp"
+    ]
   },
   "scripts": {
     "lint": "pnpm -r lint",
     "test": "pnpm -r test",
+    "prettier": "pnpm -r prettier",
+    "typecheck": "pnpm -r typecheck",
     "build": "pnpm -r build"
   }
 }
