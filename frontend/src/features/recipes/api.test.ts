@@ -103,7 +103,9 @@ describe("recipeService.updateRecipe", () => {
       servings: 4,
       prepTime: 30,
       difficulty: "easy" as const,
-      ingredients: [{ id: "ing-1", name: "Pommes", quantity: 4, unit: "pièces" }],
+      ingredients: [
+        { id: "ing-1", name: "Pommes", quantity: 4, unit: "pièces" }
+      ],
       steps: [{ id: "step-1", order: 1, instruction: "Éplucher les pommes" }]
     }
 
@@ -132,7 +134,9 @@ describe("recipeService.updateRecipe", () => {
       servings: 4,
       prepTime: 30,
       difficulty: "easy" as const,
-      ingredients: [{ id: "ing-1", name: "Pommes", quantity: 4, unit: "pièces" }],
+      ingredients: [
+        { id: "ing-1", name: "Pommes", quantity: 4, unit: "pièces" }
+      ],
       steps: [{ id: "step-1", order: 1, instruction: "Éplucher les pommes" }]
     }
 
@@ -153,7 +157,9 @@ describe("recipeService.updateRecipe", () => {
       servings: 2,
       prepTime: 10,
       difficulty: "easy" as const,
-      ingredients: [{ id: "ing-uuid", name: "Farine", quantity: 200, unit: "g" }],
+      ingredients: [
+        { id: "ing-uuid", name: "Farine", quantity: 200, unit: "g" }
+      ],
       steps: [{ id: "step-uuid", order: 1, instruction: "Mélanger" }]
     }
 

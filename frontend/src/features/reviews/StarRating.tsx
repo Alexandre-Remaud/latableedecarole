@@ -52,7 +52,9 @@ export default function StarRating({
               width={pixelSize}
               height={pixelSize}
               viewBox="0 0 24 24"
-              fill={filled ? "#f59e0b" : halfFilled ? `url(#${gradientId})` : "none"}
+              fill={
+                filled ? "#f59e0b" : halfFilled ? `url(#${gradientId})` : "none"
+              }
               stroke="#f59e0b"
               strokeWidth="2"
               strokeLinecap="round"

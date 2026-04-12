@@ -25,10 +25,7 @@ export const favoritesApi = {
     )
   },
 
-  async getMyFavorites(
-    skip = 0,
-    limit = 20
-  ): Promise<FavoritesListResponse> {
+  async getMyFavorites(skip = 0, limit = 20): Promise<FavoritesListResponse> {
     return apiFetch<FavoritesListResponse>(
       `${API_URL}/users/me/favorites?skip=${skip}&limit=${limit}`,
       {

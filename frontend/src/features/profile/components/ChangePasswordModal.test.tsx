@@ -27,7 +27,9 @@ describe("ChangePasswordModal", () => {
       screen.getByLabelText("Confirmer le nouveau mot de passe"),
       { target: { value: "NewPassword1" } }
     )
-    fireEvent.click(screen.getByRole("button", { name: "Changer le mot de passe" }))
+    fireEvent.click(
+      screen.getByRole("button", { name: "Changer le mot de passe" })
+    )
 
     await waitFor(() => {
       expect(onSave).toHaveBeenCalledWith({
@@ -59,7 +61,9 @@ describe("ChangePasswordModal", () => {
       screen.getByLabelText("Confirmer le nouveau mot de passe"),
       { target: { value: "DifferentPassword1" } }
     )
-    fireEvent.click(screen.getByRole("button", { name: "Changer le mot de passe" }))
+    fireEvent.click(
+      screen.getByRole("button", { name: "Changer le mot de passe" })
+    )
 
     await waitFor(() => {
       expect(
@@ -81,10 +85,14 @@ describe("ChangePasswordModal", () => {
       screen.getByLabelText("Confirmer le nouveau mot de passe"),
       { target: { value: "weak" } }
     )
-    fireEvent.submit(screen.getByRole("button", { name: "Changer le mot de passe" }))
+    fireEvent.submit(
+      screen.getByRole("button", { name: "Changer le mot de passe" })
+    )
 
     await waitFor(() => {
-      expect(screen.getByText(/majuscule.*minuscule.*chiffre|8 caractères/)).toBeInTheDocument()
+      expect(
+        screen.getByText(/majuscule.*minuscule.*chiffre|8 caractères/)
+      ).toBeInTheDocument()
     })
   })
 })

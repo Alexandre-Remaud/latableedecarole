@@ -33,11 +33,7 @@ describe("ConfirmDialog", () => {
 
   it("should render custom button labels", () => {
     render(
-      <ConfirmDialog
-        {...defaultProps}
-        confirmLabel="Oui"
-        cancelLabel="Non"
-      />
+      <ConfirmDialog {...defaultProps} confirmLabel="Oui" cancelLabel="Non" />
     )
 
     expect(screen.getByText("Oui")).toBeInTheDocument()

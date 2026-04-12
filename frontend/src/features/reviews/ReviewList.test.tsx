@@ -83,9 +83,7 @@ describe("ReviewList", () => {
   })
 
   it("should show empty state when no reviews", () => {
-    render(
-      <ReviewList {...defaultProps} reviews={[]} total={0} />
-    )
+    render(<ReviewList {...defaultProps} reviews={[]} total={0} />)
 
     expect(
       screen.getByText("Aucun avis pour le moment. Soyez le premier !")
@@ -108,9 +106,7 @@ describe("ReviewList", () => {
   })
 
   it("should show 'Voir plus' button when hasMore is true", () => {
-    render(
-      <ReviewList {...defaultProps} total={20} hasMore={true} />
-    )
+    render(<ReviewList {...defaultProps} total={20} hasMore={true} />)
 
     expect(screen.getByText("Voir plus d'avis")).toBeInTheDocument()
   })

@@ -41,9 +41,7 @@ export const profileApi = {
     )
   },
 
-  async changePassword(
-    data: ChangePasswordData
-  ): Promise<{ message: string }> {
+  async changePassword(data: ChangePasswordData): Promise<{ message: string }> {
     return apiFetch<{ message: string }>(`${API_URL}/users/me/password`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },

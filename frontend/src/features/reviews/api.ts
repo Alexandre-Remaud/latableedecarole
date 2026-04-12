@@ -22,39 +22,30 @@ export const reviewsApi = {
     recipeId: string,
     data: { rating: number; comment?: string }
   ): Promise<Review> {
-    return apiFetch<Review>(
-      `${API_URL}/recipes/${recipeId}/reviews`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(data)
-      }
-    )
+    return apiFetch<Review>(`${API_URL}/recipes/${recipeId}/reviews`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(data)
+    })
   },
 
   async updateReview(
     reviewId: string,
     data: { rating?: number; comment?: string }
   ): Promise<Review> {
-    return apiFetch<Review>(
-      `${API_URL}/reviews/${reviewId}`,
-      {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(data)
-      }
-    )
+    return apiFetch<Review>(`${API_URL}/reviews/${reviewId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(data)
+    })
   },
 
   async deleteReview(reviewId: string): Promise<{ deleted: boolean }> {
-    return apiFetch<{ deleted: boolean }>(
-      `${API_URL}/reviews/${reviewId}`,
-      {
-        method: "DELETE",
-        credentials: "include"
-      }
-    )
+    return apiFetch<{ deleted: boolean }>(`${API_URL}/reviews/${reviewId}`, {
+      method: "DELETE",
+      credentials: "include"
+    })
   }
 }

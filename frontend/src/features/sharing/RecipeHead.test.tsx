@@ -18,9 +18,7 @@ function renderWithHelmet(ui: React.ReactElement) {
 
 describe("RecipeHead", () => {
   it("should render without crashing", () => {
-    const { container } = renderWithHelmet(
-      <RecipeHead recipe={mockRecipe} />
-    )
+    const { container } = renderWithHelmet(<RecipeHead recipe={mockRecipe} />)
 
     expect(container).toBeTruthy()
   })
@@ -31,9 +29,7 @@ describe("RecipeHead", () => {
       description: "A".repeat(200)
     }
 
-    const { container } = renderWithHelmet(
-      <RecipeHead recipe={longRecipe} />
-    )
+    const { container } = renderWithHelmet(<RecipeHead recipe={longRecipe} />)
 
     expect(container).toBeTruthy()
   })

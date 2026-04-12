@@ -29,7 +29,14 @@ describe("FavoriteButton", () => {
 
   it("should render with correct aria-label when not favorited", () => {
     vi.mocked(useAuth).mockReturnValue({
-      user: { _id: "1", email: "t@t.com", name: "Test", role: "user", createdAt: "2026-01-01T00:00:00Z", updatedAt: "2026-01-01T00:00:00Z" },
+      user: {
+        _id: "1",
+        email: "t@t.com",
+        name: "Test",
+        role: "user",
+        createdAt: "2026-01-01T00:00:00Z",
+        updatedAt: "2026-01-01T00:00:00Z"
+      },
       isLoading: false,
       login: vi.fn(),
       register: vi.fn(),
@@ -45,14 +52,19 @@ describe("FavoriteButton", () => {
       />
     )
 
-    expect(
-      screen.getByLabelText("Ajouter aux favoris")
-    ).toBeInTheDocument()
+    expect(screen.getByLabelText("Ajouter aux favoris")).toBeInTheDocument()
   })
 
   it("should render with correct aria-label when favorited", () => {
     vi.mocked(useAuth).mockReturnValue({
-      user: { _id: "1", email: "t@t.com", name: "Test", role: "user", createdAt: "2026-01-01T00:00:00Z", updatedAt: "2026-01-01T00:00:00Z" },
+      user: {
+        _id: "1",
+        email: "t@t.com",
+        name: "Test",
+        role: "user",
+        createdAt: "2026-01-01T00:00:00Z",
+        updatedAt: "2026-01-01T00:00:00Z"
+      },
       isLoading: false,
       login: vi.fn(),
       register: vi.fn(),
@@ -74,14 +86,19 @@ describe("FavoriteButton", () => {
       />
     )
 
-    expect(
-      screen.getByLabelText("Retirer des favoris")
-    ).toBeInTheDocument()
+    expect(screen.getByLabelText("Retirer des favoris")).toBeInTheDocument()
   })
 
   it("should display the count when greater than 0", () => {
     vi.mocked(useAuth).mockReturnValue({
-      user: { _id: "1", email: "t@t.com", name: "Test", role: "user", createdAt: "2026-01-01T00:00:00Z", updatedAt: "2026-01-01T00:00:00Z" },
+      user: {
+        _id: "1",
+        email: "t@t.com",
+        name: "Test",
+        role: "user",
+        createdAt: "2026-01-01T00:00:00Z",
+        updatedAt: "2026-01-01T00:00:00Z"
+      },
       isLoading: false,
       login: vi.fn(),
       register: vi.fn(),
@@ -108,7 +125,14 @@ describe("FavoriteButton", () => {
 
   it("should not display count when it is 0", () => {
     vi.mocked(useAuth).mockReturnValue({
-      user: { _id: "1", email: "t@t.com", name: "Test", role: "user", createdAt: "2026-01-01T00:00:00Z", updatedAt: "2026-01-01T00:00:00Z" },
+      user: {
+        _id: "1",
+        email: "t@t.com",
+        name: "Test",
+        role: "user",
+        createdAt: "2026-01-01T00:00:00Z",
+        updatedAt: "2026-01-01T00:00:00Z"
+      },
       isLoading: false,
       login: vi.fn(),
       register: vi.fn(),
@@ -129,7 +153,14 @@ describe("FavoriteButton", () => {
 
   it("should call toggleFavorite on click for authenticated users", () => {
     vi.mocked(useAuth).mockReturnValue({
-      user: { _id: "1", email: "t@t.com", name: "Test", role: "user", createdAt: "2026-01-01T00:00:00Z", updatedAt: "2026-01-01T00:00:00Z" },
+      user: {
+        _id: "1",
+        email: "t@t.com",
+        name: "Test",
+        role: "user",
+        createdAt: "2026-01-01T00:00:00Z",
+        updatedAt: "2026-01-01T00:00:00Z"
+      },
       isLoading: false,
       login: vi.fn(),
       register: vi.fn(),
@@ -196,7 +227,14 @@ describe("FavoriteButton", () => {
 
   it("should be disabled when loading", () => {
     vi.mocked(useAuth).mockReturnValue({
-      user: { _id: "1", email: "t@t.com", name: "Test", role: "user", createdAt: "2026-01-01T00:00:00Z", updatedAt: "2026-01-01T00:00:00Z" },
+      user: {
+        _id: "1",
+        email: "t@t.com",
+        name: "Test",
+        role: "user",
+        createdAt: "2026-01-01T00:00:00Z",
+        updatedAt: "2026-01-01T00:00:00Z"
+      },
       isLoading: false,
       login: vi.fn(),
       register: vi.fn(),

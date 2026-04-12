@@ -26,7 +26,9 @@ describe("uploadService", () => {
         new Response(JSON.stringify({ message: "Not found" }), { status: 404 })
       )
 
-      await expect(uploadService.deleteImage("bad-id")).rejects.toThrow(ApiError)
+      await expect(uploadService.deleteImage("bad-id")).rejects.toThrow(
+        ApiError
+      )
     })
 
     it("should use fallback message if response has no message", async () => {
@@ -73,12 +75,9 @@ describe("uploadService", () => {
         })
       }
 
-      vi.stubGlobal(
-        "XMLHttpRequest",
-        function (this: typeof mockXhr) {
-          Object.assign(this, mockXhr)
-        }
-      )
+      vi.stubGlobal("XMLHttpRequest", function (this: typeof mockXhr) {
+        Object.assign(this, mockXhr)
+      })
 
       const file = new File(["data"], "photo.jpg", { type: "image/jpeg" })
       const result = await uploadService.uploadImage(file)
@@ -107,12 +106,9 @@ describe("uploadService", () => {
         })
       }
 
-      vi.stubGlobal(
-        "XMLHttpRequest",
-        function (this: typeof mockXhr) {
-          Object.assign(this, mockXhr)
-        }
-      )
+      vi.stubGlobal("XMLHttpRequest", function (this: typeof mockXhr) {
+        Object.assign(this, mockXhr)
+      })
 
       const file = new File(["data"], "photo.jpg", { type: "image/jpeg" })
       await expect(uploadService.uploadImage(file)).rejects.toThrow(ApiError)
@@ -137,15 +133,14 @@ describe("uploadService", () => {
         })
       }
 
-      vi.stubGlobal(
-        "XMLHttpRequest",
-        function (this: typeof mockXhr) {
-          Object.assign(this, mockXhr)
-        }
-      )
+      vi.stubGlobal("XMLHttpRequest", function (this: typeof mockXhr) {
+        Object.assign(this, mockXhr)
+      })
 
       const file = new File(["data"], "photo.jpg", { type: "image/jpeg" })
-      await expect(uploadService.uploadImage(file)).rejects.toThrow(NetworkError)
+      await expect(uploadService.uploadImage(file)).rejects.toThrow(
+        NetworkError
+      )
     })
 
     it("should call onProgress when progress event fires", async () => {
@@ -157,7 +152,12 @@ describe("uploadService", () => {
         send: vi.fn(),
         withCredentials: false,
         status: 200,
-        responseText: JSON.stringify({ publicId: "x", originalUrl: "", thumbnailUrl: "", mediumUrl: "" }),
+        responseText: JSON.stringify({
+          publicId: "x",
+          originalUrl: "",
+          thumbnailUrl: "",
+          mediumUrl: ""
+        }),
         upload: {
           addEventListener: vi.fn(
             (event: string, handler: (e: ProgressEvent) => void) => {
@@ -187,12 +187,9 @@ describe("uploadService", () => {
         })
       }
 
-      vi.stubGlobal(
-        "XMLHttpRequest",
-        function (this: typeof mockXhr) {
-          Object.assign(this, mockXhr)
-        }
-      )
+      vi.stubGlobal("XMLHttpRequest", function (this: typeof mockXhr) {
+        Object.assign(this, mockXhr)
+      })
 
       const file = new File(["data"], "photo.jpg", { type: "image/jpeg" })
       await uploadService.uploadImage(file, onProgress)

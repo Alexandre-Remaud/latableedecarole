@@ -138,9 +138,7 @@ export default function ReviewList({
                 </div>
 
                 {review.comment && (
-                  <p className="text-sm text-gray-600 mt-2">
-                    {review.comment}
-                  </p>
+                  <p className="text-sm text-gray-600 mt-2">{review.comment}</p>
                 )}
               </li>
             )

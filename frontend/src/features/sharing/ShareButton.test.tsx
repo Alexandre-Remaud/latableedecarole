@@ -29,9 +29,7 @@ describe("ShareButton", () => {
       />
     )
 
-    expect(
-      screen.getByLabelText("Partager la recette")
-    ).toBeInTheDocument()
+    expect(screen.getByLabelText("Partager la recette")).toBeInTheDocument()
   })
 
   it("should call share on click", () => {

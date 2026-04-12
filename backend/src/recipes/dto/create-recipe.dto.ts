@@ -91,11 +91,17 @@ export class CreateRecipeDto {
   imageUrl?: string
 
   @IsOptional()
-  @IsUrl({ require_tld: false }, { message: "L'URL de la miniature est invalide" })
+  @IsUrl(
+    { require_tld: false },
+    { message: "L'URL de la miniature est invalide" }
+  )
   imageThumbnailUrl?: string
 
   @IsOptional()
-  @IsUrl({ require_tld: false }, { message: "L'URL de l'image moyenne est invalide" })
+  @IsUrl(
+    { require_tld: false },
+    { message: "L'URL de l'image moyenne est invalide" }
+  )
   imageMediumUrl?: string
 
   @IsOptional()

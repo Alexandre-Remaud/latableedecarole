@@ -31,9 +31,7 @@ export default function FavoriteButton({
       }}
       disabled={!user || isLoading}
       className={`inline-flex items-center gap-1 text-sm transition-colors ${
-        user
-          ? "hover:text-red-500 cursor-pointer"
-          : "cursor-default"
+        user ? "hover:text-red-500 cursor-pointer" : "cursor-default"
       } ${favorited ? "text-red-500" : "text-gray-400"}`}
       aria-label={favorited ? "Retirer des favoris" : "Ajouter aux favoris"}
       title={!user ? "Connectez-vous pour ajouter aux favoris" : undefined}

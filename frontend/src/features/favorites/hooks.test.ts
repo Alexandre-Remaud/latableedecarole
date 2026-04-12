@@ -24,9 +24,7 @@ describe("useFavoriteToggle", () => {
   })
 
   it("should return initial state", () => {
-    const { result } = renderHook(() =>
-      useFavoriteToggle("recipe-1", false, 5)
-    )
+    const { result } = renderHook(() => useFavoriteToggle("recipe-1", false, 5))
 
     expect(result.current.favorited).toBe(false)
     expect(result.current.count).toBe(5)
@@ -39,9 +37,7 @@ describe("useFavoriteToggle", () => {
       favoritesCount: 6
     })
 
-    const { result } = renderHook(() =>
-      useFavoriteToggle("recipe-1", false, 5)
-    )
+    const { result } = renderHook(() => useFavoriteToggle("recipe-1", false, 5))
 
     await act(async () => {
       await result.current.toggleFavorite()
@@ -58,9 +54,7 @@ describe("useFavoriteToggle", () => {
       favoritesCount: 4
     })
 
-    const { result } = renderHook(() =>
-      useFavoriteToggle("recipe-1", true, 5)
-    )
+    const { result } = renderHook(() => useFavoriteToggle("recipe-1", true, 5))
 
     await act(async () => {
       await result.current.toggleFavorite()
@@ -76,9 +70,7 @@ describe("useFavoriteToggle", () => {
       new Error("Network error")
     )
 
-    const { result } = renderHook(() =>
-      useFavoriteToggle("recipe-1", false, 5)
-    )
+    const { result } = renderHook(() => useFavoriteToggle("recipe-1", false, 5))
 
     await act(async () => {
       await result.current.toggleFavorite()
@@ -97,9 +89,7 @@ describe("useFavoriteToggle", () => {
       favoritesCount: 6
     })
 
-    const { result } = renderHook(() =>
-      useFavoriteToggle("recipe-1", false, 5)
-    )
+    const { result } = renderHook(() => useFavoriteToggle("recipe-1", false, 5))
 
     await act(async () => {
       await result.current.toggleFavorite()

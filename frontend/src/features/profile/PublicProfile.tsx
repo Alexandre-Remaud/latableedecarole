@@ -2,7 +2,10 @@ import { useState, useEffect, useCallback } from "react"
 import { Link, useParams } from "@tanstack/react-router"
 import toast from "react-hot-toast"
 import { profileApi } from "./api"
-import type { PublicProfile as PublicProfileType, UserRecipesResponse } from "./contract"
+import type {
+  PublicProfile as PublicProfileType,
+  UserRecipesResponse
+} from "./contract"
 import ProfileHeader from "./components/ProfileHeader"
 
 const RECIPES_LIMIT = 10
@@ -22,9 +25,7 @@ export default function PublicProfile() {
         const data = await profileApi.getPublicProfile(id)
         setProfile(data)
       } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "Utilisateur non trouvé"
-        )
+        setError(err instanceof Error ? err.message : "Utilisateur non trouvé")
       } finally {
         setLoading(false)
       }
@@ -32,21 +33,24 @@ export default function PublicProfile() {
     void loadProfile()
   }, [id])
 
-  const loadRecipes = useCallback(async (page: number) => {
-    try {
-      const result = await profileApi.getUserRecipes(
-        id,
-        page * RECIPES_LIMIT,
-        RECIPES_LIMIT
-      )
-      setRecipes(result.data)
-      setRecipesTotal(result.total)
-    } catch (err) {
-      toast.error(
-        err instanceof Error ? err.message : "Erreur lors du chargement"
-      )
-    }
-  }, [id])
+  const loadRecipes = useCallback(
+    async (page: number) => {
+      try {
+        const result = await profileApi.getUserRecipes(
+          id,
+          page * RECIPES_LIMIT,
+          RECIPES_LIMIT
+        )
+        setRecipes(result.data)
+        setRecipesTotal(result.total)
+      } catch (err) {
+        toast.error(
+          err instanceof Error ? err.message : "Erreur lors du chargement"
+        )
+      }
+    },
+    [id]
+  )
 
   useEffect(() => {
     if (profile) {

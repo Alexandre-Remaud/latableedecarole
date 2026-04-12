@@ -158,8 +158,8 @@ describe("changePasswordSchema", () => {
     })
     expect(result.success).toBe(false)
     if (!result.success) {
-      const confirmError = result.error.issues.find(
-        (i) => i.path.includes("confirmPassword")
+      const confirmError = result.error.issues.find((i) =>
+        i.path.includes("confirmPassword")
       )
       expect(confirmError).toBeDefined()
     }

@@ -116,7 +116,9 @@ describe("apiFetch", () => {
           const signal = (options as RequestInit)?.signal
           if (signal) {
             signal.addEventListener("abort", () => {
-              reject(new DOMException("The operation was aborted.", "AbortError"))
+              reject(
+                new DOMException("The operation was aborted.", "AbortError")
+              )
             })
           }
         })

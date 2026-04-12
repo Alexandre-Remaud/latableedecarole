@@ -27,7 +27,9 @@ export function useRecipeReviews(recipeId: string) {
         setSkip(offset + LIMIT)
       } catch (err) {
         toast.error(
-          err instanceof Error ? err.message : "Erreur lors du chargement des avis"
+          err instanceof Error
+            ? err.message
+            : "Erreur lors du chargement des avis"
         )
       }
     },
@@ -47,7 +49,9 @@ export function useRecipeReviews(recipeId: string) {
       } catch (err) {
         if (cancelled) return
         toast.error(
-          err instanceof Error ? err.message : "Erreur lors du chargement des avis"
+          err instanceof Error
+            ? err.message
+            : "Erreur lors du chargement des avis"
         )
       } finally {
         if (!cancelled) setLoading(false)
@@ -84,10 +88,7 @@ export function useRecipeReviews(recipeId: string) {
   }
 }
 
-export function useSubmitReview(
-  recipeId: string,
-  onSuccess: () => void
-) {
+export function useSubmitReview(recipeId: string, onSuccess: () => void) {
   const [isLoading, setIsLoading] = useState(false)
 
   async function submitReview(data: { rating: number; comment?: string }) {

@@ -42,16 +42,12 @@ export default function ProfileHeader({
         <h1 className="font-display text-2xl font-bold text-gray-800">
           {name}
         </h1>
-        {bio && (
-          <p className="mt-1 text-sm text-gray-600">{bio}</p>
-        )}
+        {bio && <p className="mt-1 text-sm text-gray-600">{bio}</p>}
         {showEmail && email && (
           <p className="mt-1 text-sm text-gray-500">{email}</p>
         )}
         <div className="mt-3 flex items-center gap-4 text-sm text-gray-500">
-          <span>
-            Membre depuis le {formattedDate}
-          </span>
+          <span>Membre depuis le {formattedDate}</span>
           <span>
             {recipesCount} recette{recipesCount > 1 ? "s" : ""}
           </span>

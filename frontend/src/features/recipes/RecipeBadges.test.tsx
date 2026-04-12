@@ -6,7 +6,12 @@ describe("RecipeBadges", () => {
   it("should render category badge", () => {
     render(
       <RecipeBadges
-        recipe={{ category: "dessert", difficulty: undefined, servings: undefined, cookTime: undefined }}
+        recipe={{
+          category: "dessert",
+          difficulty: undefined,
+          servings: undefined,
+          cookTime: undefined
+        }}
       />
     )
 
@@ -16,7 +21,12 @@ describe("RecipeBadges", () => {
   it("should render difficulty badge", () => {
     render(
       <RecipeBadges
-        recipe={{ category: undefined, difficulty: "easy", servings: undefined, cookTime: undefined }}
+        recipe={{
+          category: undefined,
+          difficulty: "easy",
+          servings: undefined,
+          cookTime: undefined
+        }}
       />
     )
 
@@ -26,7 +36,12 @@ describe("RecipeBadges", () => {
   it("should render servings badge", () => {
     render(
       <RecipeBadges
-        recipe={{ category: undefined, difficulty: undefined, servings: 4, cookTime: undefined }}
+        recipe={{
+          category: undefined,
+          difficulty: undefined,
+          servings: 4,
+          cookTime: undefined
+        }}
       />
     )
 
@@ -36,7 +51,12 @@ describe("RecipeBadges", () => {
   it("should render cookTime badge", () => {
     render(
       <RecipeBadges
-        recipe={{ category: undefined, difficulty: undefined, servings: undefined, cookTime: 30 }}
+        recipe={{
+          category: undefined,
+          difficulty: undefined,
+          servings: undefined,
+          cookTime: 30
+        }}
       />
     )
 
@@ -46,7 +66,12 @@ describe("RecipeBadges", () => {
   it("should not render cookTime badge when cookTime is 0", () => {
     render(
       <RecipeBadges
-        recipe={{ category: undefined, difficulty: undefined, servings: undefined, cookTime: 0 }}
+        recipe={{
+          category: undefined,
+          difficulty: undefined,
+          servings: undefined,
+          cookTime: 0
+        }}
       />
     )
 
@@ -56,7 +81,12 @@ describe("RecipeBadges", () => {
   it("should render multiple badges", () => {
     render(
       <RecipeBadges
-        recipe={{ category: "main_course", difficulty: "hard", servings: 6, cookTime: 45 }}
+        recipe={{
+          category: "main_course",
+          difficulty: "hard",
+          servings: 6,
+          cookTime: 45
+        }}
       />
     )
 
@@ -68,7 +98,12 @@ describe("RecipeBadges", () => {
   it("should render nothing when all fields are empty", () => {
     const { container } = render(
       <RecipeBadges
-        recipe={{ category: undefined, difficulty: undefined, servings: undefined, cookTime: undefined }}
+        recipe={{
+          category: undefined,
+          difficulty: undefined,
+          servings: undefined,
+          cookTime: undefined
+        }}
       />
     )
 
@@ -79,7 +114,12 @@ describe("RecipeBadges", () => {
   it("should apply custom className", () => {
     const { container } = render(
       <RecipeBadges
-        recipe={{ category: "dessert", difficulty: undefined, servings: undefined, cookTime: undefined }}
+        recipe={{
+          category: "dessert",
+          difficulty: undefined,
+          servings: undefined,
+          cookTime: undefined
+        }}
         className="mt-4"
       />
     )
