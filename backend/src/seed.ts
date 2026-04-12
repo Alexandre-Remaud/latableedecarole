@@ -1688,7 +1688,7 @@ function buildShoppingLists(
 
 async function main() {
   const uri = process.env.MONGO_URI
-  const dbName = process.env.MONGO_DB_NAME
+  const dbName = process.env.MONGO_DB_NAME ?? "chezcarole_dev"
   if (!uri) throw new Error("MONGO_URI manquant dans .env")
 
   console.log("Connexion à MongoDB…")
@@ -1740,8 +1740,10 @@ async function main() {
       RecipeModel.updateOne(
         { _id: new Types.ObjectId(recipeId) },
         {
-          averageRating: Math.round((sum / count) * 10) / 10,
-          ratingsCount: count
+          $set: {
+            averageRating: Math.round((sum / count) * 10) / 10,
+            ratingsCount: count
+          }
         }
       )
     )
