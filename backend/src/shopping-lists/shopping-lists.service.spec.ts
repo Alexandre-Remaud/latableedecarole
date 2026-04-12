@@ -77,12 +77,11 @@ describe("ShoppingListsService", () => {
         recipeIds: [RECIPE_ID]
       })
 
-      expect(mockShoppingListModel.create).toHaveBeenCalledWith(
-        expect.objectContaining({
-          name: "Ma liste",
-          userId: expect.any(Types.ObjectId)
-        })
-      )
+      const createCalls = mockShoppingListModel.create.mock.calls as Array<
+        [{ name: string; userId: Types.ObjectId }]
+      >
+      expect(createCalls[0][0].name).toBe("Ma liste")
+      expect(createCalls[0][0].userId).toBeInstanceOf(Types.ObjectId)
       expect(result).toBe(mockList)
     })
 
@@ -187,9 +186,10 @@ describe("ShoppingListsService", () => {
 
       const result = await service.findAll(USER_ID)
 
-      expect(mockShoppingListModel.find).toHaveBeenCalledWith({
-        userId: expect.any(Types.ObjectId)
-      })
+      const findCalls = mockShoppingListModel.find.mock.calls as Array<
+        [{ userId: Types.ObjectId }]
+      >
+      expect(findCalls[0][0].userId).toBeInstanceOf(Types.ObjectId)
       expect(result).toEqual({ data: [mockList], total: 1 })
     })
   })
@@ -293,10 +293,17 @@ describe("ShoppingListsService", () => {
         true
       )
 
-      expect(mockShoppingListModel.updateOne).toHaveBeenCalledWith(
-        { _id: expect.any(Types.ObjectId), userId: expect.any(Types.ObjectId) },
-        { $set: { "items.$[item].checked": true } },
-        { arrayFilters: [{ "item._id": expect.any(Types.ObjectId) }] }
+      const [filterArg, updateArg, optionsArg] = mockShoppingListModel.updateOne
+        .mock.calls[0] as [
+        { _id: Types.ObjectId; userId: Types.ObjectId },
+        { $set: Record<string, unknown> },
+        { arrayFilters: { "item._id": Types.ObjectId }[] }
+      ]
+      expect(filterArg._id).toBeInstanceOf(Types.ObjectId)
+      expect(filterArg.userId).toBeInstanceOf(Types.ObjectId)
+      expect(updateArg.$set["items.$[item].checked"]).toBe(true)
+      expect(optionsArg.arrayFilters[0]["item._id"]).toBeInstanceOf(
+        Types.ObjectId
       )
       expect(result).toBe(updatedList)
     })
