@@ -86,15 +86,22 @@ describe("CollectionsService", () => {
   })
 
   describe("findOne", () => {
-    it("should return collection if public", async () => {
+    it("should return collection with recipes if public", async () => {
       mockCollectionModel.findById.mockReturnValue({
-        exec: jest.fn().mockResolvedValue({ ...mockCollection, isPublic: true })
+        exec: jest.fn().mockResolvedValue({
+          ...mockCollection,
+          isPublic: true,
+          toObject: jest
+            .fn()
+            .mockReturnValue({ ...mockCollection, isPublic: true })
+        })
       })
       mockRecipeModel.find.mockReturnValue({
         exec: jest.fn().mockResolvedValue([mockRecipe])
       })
       const result = await service.findOne(COLL_ID, undefined)
-      expect(result).toBeDefined()
+      expect(result).toHaveProperty("recipes")
+      expect(result.name).toBe("Ma collection")
     })
 
     it("should throw 403 if private and not owner", async () => {
@@ -127,6 +134,23 @@ describe("CollectionsService", () => {
         service.update(COLL_ID, OTHER_ID, { name: "X" })
       ).rejects.toThrow(ForbiddenException)
     })
+
+    it("should update fields and save collection", async () => {
+      const saveMock = jest.fn().mockResolvedValue(undefined)
+      const mutableCollection = {
+        ...mockCollection,
+        userId: new Types.ObjectId(USER_ID),
+        save: saveMock
+      }
+      mockCollectionModel.findById.mockReturnValue({
+        exec: jest.fn().mockResolvedValue(mutableCollection)
+      })
+      const result = await service.update(COLL_ID, USER_ID, {
+        name: "Nouveau nom"
+      })
+      expect(saveMock).toHaveBeenCalled()
+      expect(result.name).toBe("Nouveau nom")
+    })
   })
 
   describe("remove", () => {
@@ -137,6 +161,20 @@ describe("CollectionsService", () => {
       await expect(service.remove(COLL_ID, OTHER_ID)).rejects.toThrow(
         ForbiddenException
       )
+    })
+
+    it("should delete collection and return { deleted: true }", async () => {
+      mockCollectionModel.findById.mockReturnValue({
+        exec: jest.fn().mockResolvedValue(mockCollection)
+      })
+      mockCollectionModel.findByIdAndDelete.mockReturnValue({
+        exec: jest.fn().mockResolvedValue(mockCollection)
+      })
+      const result = await service.remove(COLL_ID, USER_ID)
+      expect(mockCollectionModel.findByIdAndDelete).toHaveBeenCalledWith(
+        COLL_ID
+      )
+      expect(result).toEqual({ deleted: true })
     })
   })
 
