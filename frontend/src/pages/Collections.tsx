@@ -1,11 +1,21 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useNavigate } from "@tanstack/react-router"
 import { useMyCollections } from "@/features/collections/hooks"
+import { useAuth } from "@/features/auth/hooks"
 import CollectionCard from "@/features/collections/components/CollectionCard"
 import { collectionsApi } from "@/features/collections/api"
 import toast from "react-hot-toast"
 
 export default function Collections() {
+  const { user, loading: authLoading } = useAuth()
+  const navigate = useNavigate()
   const { collections, loading, error, refresh } = useMyCollections()
+
+  useEffect(() => {
+    if (!authLoading && !user) {
+      void navigate({ to: "/login" })
+    }
+  }, [authLoading, user, navigate])
   const [creating, setCreating] = useState(false)
   const [newName, setNewName] = useState("")
   const [submitting, setSubmitting] = useState(false)

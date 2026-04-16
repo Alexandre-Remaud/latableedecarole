@@ -14,6 +14,7 @@ import { CollectionsService } from "./collections.service"
 import { CreateCollectionDto } from "./dto/create-collection.dto"
 import { UpdateCollectionDto } from "./dto/update-collection.dto"
 import { GetCollectionsDto } from "./dto/get-collections.dto"
+import { AddRecipeDto } from "./dto/add-recipe.dto"
 import { CurrentUser } from "../auth/decorators/current-user.decorator"
 import { Public } from "../auth/decorators/public.decorator"
 
@@ -67,13 +68,9 @@ export class CollectionsController {
   addRecipe(
     @Param("id") collectionId: string,
     @CurrentUser("sub") userId: string,
-    @Body() body: { recipeId: string }
+    @Body() dto: AddRecipeDto
   ) {
-    return this.collectionsService.addRecipe(
-      collectionId,
-      userId,
-      body.recipeId
-    )
+    return this.collectionsService.addRecipe(collectionId, userId, dto.recipeId)
   }
 
   @Delete(":id/recipes/:recipeId")

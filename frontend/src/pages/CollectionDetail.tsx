@@ -31,8 +31,12 @@ export default function CollectionDetail() {
   const isOwner = user?._id === collection.userId
 
   async function handleShare() {
-    await navigator.clipboard.writeText(window.location.href)
-    toast.success("Lien copié !")
+    try {
+      await navigator.clipboard.writeText(window.location.href)
+      toast.success("Lien copié !")
+    } catch {
+      toast.error("Impossible de copier le lien")
+    }
   }
 
   async function handleTogglePublic() {

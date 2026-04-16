@@ -1,11 +1,11 @@
-import { IsOptional, IsString } from "class-validator"
+import { IsOptional, IsNumberString } from "class-validator"
 
 export class GetCollectionsDto {
   @IsOptional()
-  @IsString()
+  @IsNumberString()
   skip?: string
 
   @IsOptional()
-  @IsString()
+  @IsNumberString()
   limit?: string
 }
