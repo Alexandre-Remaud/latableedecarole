@@ -10,6 +10,7 @@ import { UsersModule } from "./users/users.module"
 import { FavoritesModule } from "./favorites/favorites.module"
 import { ReviewsModule } from "./reviews/reviews.module"
 import { ShoppingListsModule } from "./shopping-lists/shopping-lists.module"
+import { CollectionsModule } from "./collections/collections.module"
 import { JwtAuthGuard } from "./auth/guards/jwt-auth.guard"
 import { RolesGuard } from "./auth/guards/roles.guard"
 import { validate } from "./config/env.validation"
@@ -39,7 +40,8 @@ import { AppController } from "./app.controller"
     UsersModule,
     FavoritesModule,
     ReviewsModule,
-    ShoppingListsModule
+    ShoppingListsModule,
+    CollectionsModule
   ],
   providers: [
     {
