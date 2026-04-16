@@ -194,6 +194,25 @@ export default function Layout() {
                   {user ? (
                     <>
                       <Link
+                        to="/collections"
+                        className="shrink-0 p-2 text-gray-500 hover:text-warm-600 border border-gray-200 hover:border-warm-300 rounded-xl transition-colors"
+                        aria-label="Mes collections"
+                        title="Mes collections"
+                      >
+                        <svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M19 11H5m14 0a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2m14 0V9a2 2 0 0 0-2-2M5 11V9a2 2 0 0 1 2-2m0 0V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2M7 7h10" />
+                        </svg>
+                      </Link>
+                      <Link
                         to="/shopping-lists"
                         className="shrink-0 p-2 text-gray-500 hover:text-warm-600 border border-gray-200 hover:border-warm-300 rounded-xl transition-colors"
                         aria-label="Mes listes de courses"
@@ -441,6 +460,13 @@ export default function Layout() {
                           className="px-4 py-2.5 text-sm font-medium text-gray-700 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors text-center"
                         >
                           Mon profil
+                        </Link>
+                        <Link
+                          to="/collections"
+                          onClick={closeAll}
+                          className="px-4 py-2.5 text-sm font-medium text-gray-700 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors text-center"
+                        >
+                          Collections
                         </Link>
                         <Link
                           to="/shopping-lists"
