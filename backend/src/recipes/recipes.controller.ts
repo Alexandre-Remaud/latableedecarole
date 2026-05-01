@@ -33,14 +33,22 @@ export class RecipesController {
     @Query("search") search?: string,
     @Query("skip") skip?: string,
     @Query("limit") limit?: string,
+    @Query("tags") tagsParam?: string,
     @CurrentUser("sub") userId?: string
   ) {
+    const tags = tagsParam
+      ? tagsParam
+          .split(",")
+          .map((t) => t.trim())
+          .filter(Boolean)
+      : undefined
     return this.recipesService.findAll(
       category,
       search,
       skip ? parseInt(skip, 10) : 0,
       limit ? parseInt(limit, 10) : 20,
-      userId
+      userId,
+      tags
     )
   }
 
