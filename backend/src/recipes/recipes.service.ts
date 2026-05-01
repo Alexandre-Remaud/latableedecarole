@@ -136,7 +136,7 @@ export class RecipesService {
   async update(id: string, updateRecipeDto: UpdateRecipeDto) {
     this.validateObjectId(id)
     const sanitized = this.sanitizeUpdateDto(updateRecipeDto)
-    if (sanitized.tags) {
+    if (sanitized.tags !== undefined) {
       sanitized.tags = this.normalizeTags(sanitized.tags)
     }
     const recipe = await this.recipeModel.findById(id).exec()
