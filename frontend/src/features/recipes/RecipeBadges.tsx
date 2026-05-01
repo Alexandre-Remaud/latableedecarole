@@ -2,11 +2,19 @@ import { DIFFICULTY_LABELS, getCategoryLabel } from "@recipes/constants/labels"
 import type { Recipe } from "@recipes/contract"
 
 type Props = {
-  recipe: Pick<Recipe, "category" | "difficulty" | "servings" | "cookTime">
+  recipe: Pick<
+    Recipe,
+    "category" | "difficulty" | "servings" | "cookTime" | "tags"
+  >
   className?: string
+  onTagClick?: (tag: string) => void
 }
 
-export default function RecipeBadges({ recipe, className = "" }: Props) {
+export default function RecipeBadges({
+  recipe,
+  className = "",
+  onTagClick
+}: Props) {
   return (
     <div className={`flex flex-wrap gap-2 ${className}`}>
       {recipe.category && (
@@ -40,6 +48,25 @@ export default function RecipeBadges({ recipe, className = "" }: Props) {
         >
           {recipe.cookTime} min
         </span>
+      )}
+      {recipe.tags?.map((tag) =>
+        onTagClick ? (
+          <button
+            key={tag}
+            type="button"
+            onClick={() => onTagClick(tag)}
+            className="text-xs px-2.5 py-1 bg-blue-50 text-blue-600 rounded-full hover:bg-blue-100 transition-colors"
+          >
+            {tag}
+          </button>
+        ) : (
+          <span
+            key={tag}
+            className="text-xs px-2.5 py-1 bg-blue-50 text-blue-600 rounded-full"
+          >
+            {tag}
+          </span>
+        )
       )}
     </div>
   )
