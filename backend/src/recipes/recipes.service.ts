@@ -25,7 +25,8 @@ const ALLOWED_UPDATE_FIELDS = [
   "cookTime",
   "servings",
   "difficulty",
-  "category"
+  "category",
+  "tags"
 ]
 
 @Injectable()
