@@ -6,6 +6,7 @@ import { RecipeSchema } from "./recipes/entities/recipe.entity"
 import { ReviewSchema } from "./reviews/entities/review.entity"
 import { FavoriteSchema } from "./favorites/entities/favorite.entity"
 import { ShoppingListSchema } from "./shopping-lists/entities/shopping-list.entity"
+import { CollectionSchema } from "./collections/entities/collection.entity"
 import { Role } from "./auth/role.enum"
 
 // ─── Models ──────────────────────────────────────────────────────────────────
@@ -15,6 +16,7 @@ const RecipeModel = mongoose.model("Recipe", RecipeSchema)
 const ReviewModel = mongoose.model("Review", ReviewSchema)
 const FavoriteModel = mongoose.model("Favorite", FavoriteSchema)
 const ShoppingListModel = mongoose.model("ShoppingList", ShoppingListSchema)
+const CollectionModel = mongoose.model("Collection", CollectionSchema)
 
 // ─── User fixtures ────────────────────────────────────────────────────────────
 
@@ -1345,6 +1347,89 @@ function buildRecipes(userIds: Types.ObjectId[]) {
   ]
 }
 
+// ─── Collection fixtures ──────────────────────────────────────────────────────
+
+function buildCollections(
+  userIds: Types.ObjectId[],
+  recipeIds: Types.ObjectId[]
+) {
+  const [caroleId, sophieId, lucasId, emmaId] = userIds
+
+  return [
+    // ── Carole ────────────────────────────────────────────────────────────
+    {
+      userId: caroleId,
+      name: "Recettes du dimanche",
+      description:
+        "Mes grands classiques pour les repas en famille, préparés avec amour le week-end.",
+      isPublic: true,
+      recipeIds: [recipeIds[0], recipeIds[10], recipeIds[2], recipeIds[21]]
+    },
+    {
+      userId: caroleId,
+      name: "Mes incontournables",
+      description: "Les recettes que je refais en boucle depuis des années.",
+      isPublic: false,
+      recipeIds: [recipeIds[4], recipeIds[3], recipeIds[1]]
+    },
+    // ── Sophie ────────────────────────────────────────────────────────────
+    {
+      userId: sophieId,
+      name: "Cuisine provençale",
+      description:
+        "Le meilleur de la cuisine du soleil : des saveurs méditerranéennes authentiques.",
+      isPublic: true,
+      recipeIds: [recipeIds[5], recipeIds[6], recipeIds[22], recipeIds[7]]
+    },
+    {
+      userId: sophieId,
+      name: "Accompagnements",
+      description:
+        "Des garnitures pour sublimer n'importe quel plat principal.",
+      isPublic: false,
+      recipeIds: [recipeIds[8], recipeIds[9]]
+    },
+    // ── Lucas ─────────────────────────────────────────────────────────────
+    {
+      userId: lucasId,
+      name: "Plats mijotés",
+      description:
+        "Des recettes qui demandent de la patience mais récompensent au centuple.",
+      isPublic: true,
+      recipeIds: [recipeIds[10], recipeIds[12], recipeIds[23]]
+    },
+    {
+      userId: lucasId,
+      name: "Brunchs & petits-déjeuners",
+      description: "Pour les matins qui méritent qu'on prenne son temps.",
+      isPublic: false,
+      recipeIds: [recipeIds[11], recipeIds[13]]
+    },
+    // ── Emma ──────────────────────────────────────────────────────────────
+    {
+      userId: emmaId,
+      name: "Végétarien & végétalien",
+      description:
+        "La preuve que manger sans viande peut être savoureux, coloré et rassasiant.",
+      isPublic: true,
+      recipeIds: [
+        recipeIds[15],
+        recipeIds[17],
+        recipeIds[18],
+        recipeIds[24],
+        recipeIds[19]
+      ]
+    },
+    {
+      userId: emmaId,
+      name: "Detox & bien-être",
+      description: "Des recettes légères pour prendre soin de soi.",
+      isPublic: false,
+      recipeIds: [recipeIds[16], recipeIds[20]]
+    }
+  ]
+}
+
 // ─── Review fixtures ──────────────────────────────────────────────────────────
 
 function buildReviews(userIds: Types.ObjectId[], recipeIds: Types.ObjectId[]) {
@@ -1911,6 +1996,7 @@ async function main() {
   await ReviewModel.deleteMany({})
   await FavoriteModel.deleteMany({})
   await ShoppingListModel.deleteMany({})
+  await CollectionModel.deleteMany({})
   await RecipeModel.deleteMany({})
   await UserModel.deleteMany({})
   console.log("Collections vidées\n")
@@ -1973,6 +2059,12 @@ async function main() {
   const shoppingLists = await ShoppingListModel.insertMany(shoppingListData)
   console.log(`  ${shoppingLists.length} listes créées`)
 
+  // Collections
+  console.log("Insertion des collections…")
+  const collectionData = buildCollections(userIds, recipeIds)
+  const collections = await CollectionModel.insertMany(collectionData)
+  console.log(`  ${collections.length} collections créées`)
+
   await mongoose.disconnect()
 
   console.log("\n✅ Seed terminé !")
@@ -1981,6 +2073,7 @@ async function main() {
   console.log(`   Avis           : ${reviews.length}`)
   console.log(`   Favoris        : ${favorites.length}`)
   console.log(`   Listes courses : ${shoppingLists.length}`)
+  console.log(`   Collections    : ${collections.length}`)
 }
 
 main().catch((err) => {

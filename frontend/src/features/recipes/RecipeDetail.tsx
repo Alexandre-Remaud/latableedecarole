@@ -10,6 +10,7 @@ import { useAuth } from "@/features/auth/hooks"
 import FavoriteButton from "@/features/favorites/FavoriteButton"
 import ShareButton from "@/features/sharing/ShareButton"
 import AddToListButton from "@/features/shopping-lists/AddToListButton"
+import AddToCollectionButton from "@/features/collections/components/AddToCollectionButton"
 import RecipeHead from "@/features/sharing/RecipeHead"
 import ReviewSummary from "@/features/reviews/ReviewSummary"
 import ReviewForm from "@/features/reviews/ReviewForm"
@@ -161,6 +162,9 @@ export default function RecipeDetail() {
               title: recipe.title,
               servings: recipe.servings
             }}
+          />
+          <AddToCollectionButton
+            recipe={{ _id: recipe._id, title: recipe.title }}
           />
           <ShareButton
             recipeId={recipe._id}

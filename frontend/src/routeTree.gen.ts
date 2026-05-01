@@ -16,10 +16,12 @@ import { Route as SplatRouteImport } from './routes/$'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ShoppingListsIndexRouteImport } from './routes/shopping-lists/index'
 import { Route as RecipesIndexRouteImport } from './routes/recipes/index'
+import { Route as CollectionsIndexRouteImport } from './routes/collections/index'
 import { Route as UsersIdRouteImport } from './routes/users/$id'
 import { Route as ShoppingListsIdRouteImport } from './routes/shopping-lists/$id'
 import { Route as RecipesAddRouteImport } from './routes/recipes/add'
 import { Route as RecipesIdRouteImport } from './routes/recipes/$id'
+import { Route as CollectionsCollectionIdRouteImport } from './routes/collections/$collectionId'
 import { Route as RecipesIdEditRouteImport } from './routes/recipes/$id_.edit'
 
 const RegisterRoute = RegisterRouteImport.update({
@@ -57,6 +59,11 @@ const RecipesIndexRoute = RecipesIndexRouteImport.update({
   path: '/recipes/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CollectionsIndexRoute = CollectionsIndexRouteImport.update({
+  id: '/collections/',
+  path: '/collections/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const UsersIdRoute = UsersIdRouteImport.update({
   id: '/users/$id',
   path: '/users/$id',
@@ -77,6 +84,11 @@ const RecipesIdRoute = RecipesIdRouteImport.update({
   path: '/recipes/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CollectionsCollectionIdRoute = CollectionsCollectionIdRouteImport.update({
+  id: '/collections/$collectionId',
+  path: '/collections/$collectionId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RecipesIdEditRoute = RecipesIdEditRouteImport.update({
   id: '/recipes/$id_/edit',
   path: '/recipes/$id/edit',
@@ -89,10 +101,12 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
+  '/collections/$collectionId': typeof CollectionsCollectionIdRoute
   '/recipes/$id': typeof RecipesIdRoute
   '/recipes/add': typeof RecipesAddRoute
   '/shopping-lists/$id': typeof ShoppingListsIdRoute
   '/users/$id': typeof UsersIdRoute
+  '/collections/': typeof CollectionsIndexRoute
   '/recipes/': typeof RecipesIndexRoute
   '/shopping-lists/': typeof ShoppingListsIndexRoute
   '/recipes/$id/edit': typeof RecipesIdEditRoute
@@ -103,10 +117,12 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
+  '/collections/$collectionId': typeof CollectionsCollectionIdRoute
   '/recipes/$id': typeof RecipesIdRoute
   '/recipes/add': typeof RecipesAddRoute
   '/shopping-lists/$id': typeof ShoppingListsIdRoute
   '/users/$id': typeof UsersIdRoute
+  '/collections': typeof CollectionsIndexRoute
   '/recipes': typeof RecipesIndexRoute
   '/shopping-lists': typeof ShoppingListsIndexRoute
   '/recipes/$id/edit': typeof RecipesIdEditRoute
@@ -118,10 +134,12 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
+  '/collections/$collectionId': typeof CollectionsCollectionIdRoute
   '/recipes/$id': typeof RecipesIdRoute
   '/recipes/add': typeof RecipesAddRoute
   '/shopping-lists/$id': typeof ShoppingListsIdRoute
   '/users/$id': typeof UsersIdRoute
+  '/collections/': typeof CollectionsIndexRoute
   '/recipes/': typeof RecipesIndexRoute
   '/shopping-lists/': typeof ShoppingListsIndexRoute
   '/recipes/$id_/edit': typeof RecipesIdEditRoute
@@ -134,10 +152,12 @@ export interface FileRouteTypes {
     | '/login'
     | '/profile'
     | '/register'
+    | '/collections/$collectionId'
     | '/recipes/$id'
     | '/recipes/add'
     | '/shopping-lists/$id'
     | '/users/$id'
+    | '/collections/'
     | '/recipes/'
     | '/shopping-lists/'
     | '/recipes/$id/edit'
@@ -148,10 +168,12 @@ export interface FileRouteTypes {
     | '/login'
     | '/profile'
     | '/register'
+    | '/collections/$collectionId'
     | '/recipes/$id'
     | '/recipes/add'
     | '/shopping-lists/$id'
     | '/users/$id'
+    | '/collections'
     | '/recipes'
     | '/shopping-lists'
     | '/recipes/$id/edit'
@@ -162,10 +184,12 @@ export interface FileRouteTypes {
     | '/login'
     | '/profile'
     | '/register'
+    | '/collections/$collectionId'
     | '/recipes/$id'
     | '/recipes/add'
     | '/shopping-lists/$id'
     | '/users/$id'
+    | '/collections/'
     | '/recipes/'
     | '/shopping-lists/'
     | '/recipes/$id_/edit'
@@ -177,10 +201,12 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   ProfileRoute: typeof ProfileRoute
   RegisterRoute: typeof RegisterRoute
+  CollectionsCollectionIdRoute: typeof CollectionsCollectionIdRoute
   RecipesIdRoute: typeof RecipesIdRoute
   RecipesAddRoute: typeof RecipesAddRoute
   ShoppingListsIdRoute: typeof ShoppingListsIdRoute
   UsersIdRoute: typeof UsersIdRoute
+  CollectionsIndexRoute: typeof CollectionsIndexRoute
   RecipesIndexRoute: typeof RecipesIndexRoute
   ShoppingListsIndexRoute: typeof ShoppingListsIndexRoute
   RecipesIdEditRoute: typeof RecipesIdEditRoute
@@ -237,6 +263,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RecipesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/collections/': {
+      id: '/collections/'
+      path: '/collections'
+      fullPath: '/collections/'
+      preLoaderRoute: typeof CollectionsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/users/$id': {
       id: '/users/$id'
       path: '/users/$id'
@@ -265,6 +298,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RecipesIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/collections/$collectionId': {
+      id: '/collections/$collectionId'
+      path: '/collections/$collectionId'
+      fullPath: '/collections/$collectionId'
+      preLoaderRoute: typeof CollectionsCollectionIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/recipes/$id_/edit': {
       id: '/recipes/$id_/edit'
       path: '/recipes/$id/edit'
@@ -281,10 +321,12 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   ProfileRoute: ProfileRoute,
   RegisterRoute: RegisterRoute,
+  CollectionsCollectionIdRoute: CollectionsCollectionIdRoute,
   RecipesIdRoute: RecipesIdRoute,
   RecipesAddRoute: RecipesAddRoute,
   ShoppingListsIdRoute: ShoppingListsIdRoute,
   UsersIdRoute: UsersIdRoute,
+  CollectionsIndexRoute: CollectionsIndexRoute,
   RecipesIndexRoute: RecipesIndexRoute,
   ShoppingListsIndexRoute: ShoppingListsIndexRoute,
   RecipesIdEditRoute: RecipesIdEditRoute,
