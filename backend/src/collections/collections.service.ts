@@ -52,7 +52,8 @@ export class CollectionsService {
 
   async findOne(collectionId: string, requestUserId: string | undefined) {
     this.validateObjectId(collectionId)
-    const collection = await this.collectionModel.findById(collectionId).exec()
+    const safeId = new Types.ObjectId(collectionId)
+    const collection = await this.collectionModel.findById(safeId).exec()
     if (!collection) throw new NotFoundException("Collection not found")
 
     const isOwner =
@@ -75,7 +76,8 @@ export class CollectionsService {
 
   async update(collectionId: string, userId: string, dto: UpdateCollectionDto) {
     this.validateObjectId(collectionId)
-    const collection = await this.collectionModel.findById(collectionId).exec()
+    const safeId = new Types.ObjectId(collectionId)
+    const collection = await this.collectionModel.findById(safeId).exec()
     if (!collection) throw new NotFoundException("Collection not found")
     if (collection.userId.toString() !== userId) {
       throw new ForbiddenException("Not the owner")
@@ -92,34 +94,39 @@ export class CollectionsService {
 
   async remove(collectionId: string, userId: string) {
     this.validateObjectId(collectionId)
-    const collection = await this.collectionModel.findById(collectionId).exec()
+    const safeId = new Types.ObjectId(collectionId)
+    const collection = await this.collectionModel.findById(safeId).exec()
     if (!collection) throw new NotFoundException("Collection not found")
     if (collection.userId.toString() !== userId) {
       throw new ForbiddenException("Not the owner")
     }
-    await this.collectionModel.findByIdAndDelete(collectionId).exec()
+    await this.collectionModel.findByIdAndDelete(safeId).exec()
     return { deleted: true }
   }
 
   async addRecipe(collectionId: string, userId: string, recipeId: string) {
     this.validateObjectId(collectionId)
     this.validateObjectId(recipeId)
+    const safeCollectionId = new Types.ObjectId(collectionId)
+    const safeRecipeId = new Types.ObjectId(recipeId)
 
-    const collection = await this.collectionModel.findById(collectionId).exec()
+    const collection = await this.collectionModel
+      .findById(safeCollectionId)
+      .exec()
     if (!collection) throw new NotFoundException("Collection not found")
     if (collection.userId.toString() !== userId) {
       throw new ForbiddenException("Not the owner")
     }
 
-    const recipe = await this.recipeModel.findById(recipeId).exec()
+    const recipe = await this.recipeModel.findById(safeRecipeId).exec()
     if (!recipe) throw new NotFoundException("Recipe not found")
 
     const alreadyIn = collection.recipeIds.some(
-      (id) => id.toString() === recipeId
+      (id) => id.toString() === safeRecipeId.toString()
     )
     if (alreadyIn) throw new ConflictException("Recipe already in collection")
 
-    collection.recipeIds.push(new Types.ObjectId(recipeId))
+    collection.recipeIds.push(safeRecipeId)
     await collection.save()
 
     const recipes = await this.recipeModel
@@ -136,8 +143,11 @@ export class CollectionsService {
   async removeRecipe(collectionId: string, userId: string, recipeId: string) {
     this.validateObjectId(collectionId)
     this.validateObjectId(recipeId)
+    const safeCollectionId = new Types.ObjectId(collectionId)
 
-    const collection = await this.collectionModel.findById(collectionId).exec()
+    const collection = await this.collectionModel
+      .findById(safeCollectionId)
+      .exec()
     if (!collection) throw new NotFoundException("Collection not found")
     if (collection.userId.toString() !== userId) {
       throw new ForbiddenException("Not the owner")
