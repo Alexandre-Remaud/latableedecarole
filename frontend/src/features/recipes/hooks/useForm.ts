@@ -26,7 +26,8 @@ export function useRecipeForm(recipeId?: string) {
       prepTime: 0,
       difficulty: "easy",
       ingredients: [createIngredient()],
-      steps: [createStep(1)]
+      steps: [createStep(1)],
+      tags: []
     }
   })
 

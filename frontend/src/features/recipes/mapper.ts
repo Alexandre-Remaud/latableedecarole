@@ -35,7 +35,8 @@ function toCreateRecipePayload(formData: RecipeFormData): CreateRecipeContract {
     ...(formData.servings && { servings: formData.servings }),
     ...(formData.difficulty && { difficulty: formData.difficulty }),
     ...(formData.category?.length && { category: formData.category }),
-    ...(formData.prepTime && { prepTime: formData.prepTime })
+    ...(formData.prepTime && { prepTime: formData.prepTime }),
+    ...(formData.tags?.length && { tags: formData.tags })
   }
 }
 

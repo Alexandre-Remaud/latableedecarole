@@ -32,6 +32,7 @@ export function recipeToFormData(recipe: Recipe): RecipeFormData {
       ...(step.temperature != null && { temperature: step.temperature }),
       ...(step.temperatureUnit && { temperatureUnit: step.temperatureUnit }),
       ...(step.note && { note: step.note })
-    }))
+    })),
+    tags: recipe.tags ?? []
   }
 }
