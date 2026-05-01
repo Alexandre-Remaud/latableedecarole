@@ -172,7 +172,7 @@ describe("CollectionsService", () => {
       })
       const result = await service.remove(COLL_ID, USER_ID)
       expect(mockCollectionModel.findByIdAndDelete).toHaveBeenCalledWith(
-        COLL_ID
+        new Types.ObjectId(COLL_ID)
       )
       expect(result).toEqual({ deleted: true })
     })
