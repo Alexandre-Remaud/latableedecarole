@@ -1,7 +1,7 @@
 # Collections / Carnets
 
 ## Statut
-todo
+done
 
 ## Description
 Les utilisateurs peuvent organiser leurs recettes favorites en collections thématiques (ex: "Repas de la semaine", "Noël", "BBQ"). Les collections sont privées par défaut mais peuvent être rendues publiques pour le partage.
