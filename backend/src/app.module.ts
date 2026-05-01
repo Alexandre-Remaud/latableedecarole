@@ -11,6 +11,7 @@ import { FavoritesModule } from "./favorites/favorites.module"
 import { ReviewsModule } from "./reviews/reviews.module"
 import { ShoppingListsModule } from "./shopping-lists/shopping-lists.module"
 import { CollectionsModule } from "./collections/collections.module"
+import { TagsModule } from "./tags/tags.module"
 import { JwtAuthGuard } from "./auth/guards/jwt-auth.guard"
 import { RolesGuard } from "./auth/guards/roles.guard"
 import { validate } from "./config/env.validation"
@@ -41,7 +42,8 @@ import { AppController } from "./app.controller"
     FavoritesModule,
     ReviewsModule,
     ShoppingListsModule,
-    CollectionsModule
+    CollectionsModule,
+    TagsModule
   ],
   providers: [
     {
