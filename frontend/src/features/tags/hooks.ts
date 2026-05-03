@@ -1,18 +1,29 @@
-import { useQuery } from "@tanstack/react-query"
+import { useEffect, useState } from "react"
 import { tagsService } from "./api"
+import type { Tag } from "./types"
 
 export function useTags() {
-  return useQuery({
-    queryKey: ["tags"],
-    queryFn: () => tagsService.getTags(100),
-    staleTime: 5 * 60 * 1000
-  })
+  const [data, setData] = useState<Tag[]>([])
+
+  useEffect(() => {
+    tagsService
+      .getTags(100)
+      .then(setData)
+      .catch(() => {})
+  }, [])
+
+  return { data }
 }
 
 export function usePopularTags() {
-  return useQuery({
-    queryKey: ["tags", "popular"],
-    queryFn: () => tagsService.getPopularTags(),
-    staleTime: 5 * 60 * 1000
-  })
+  const [data, setData] = useState<Tag[]>([])
+
+  useEffect(() => {
+    tagsService
+      .getPopularTags()
+      .then(setData)
+      .catch(() => {})
+  }, [])
+
+  return { data }
 }
