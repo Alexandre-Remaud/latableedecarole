@@ -55,4 +55,4 @@ export const recipeFormSchema = z.object({
   tags: z.array(z.string().min(2).max(30)).max(10).optional().default([])
 })
 
-export type RecipeFormData = z.infer<typeof recipeFormSchema>
+export type RecipeFormData = z.input<typeof recipeFormSchema>
