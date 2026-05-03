@@ -97,7 +97,7 @@ describe("recipeService.getRecipes", () => {
 
     const [url] = (fetch as ReturnType<typeof vi.fn>).mock.calls[0]
     expect(url).toContain("tags=")
-    expect(url).toContain("végétarien")
+    expect(decodeURIComponent(url)).toContain("végétarien")
   })
 
   it("should not include tags param when tags array is empty", async () => {

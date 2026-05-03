@@ -45,7 +45,7 @@ export default function Recipes() {
         search,
         0,
         LIMIT,
-        selectedTags.length ? selectedTags : undefined
+        tagsParam ? tagsParam.split(",").filter(Boolean) : undefined
       )
       .then(({ data, total }) => {
         setRecipes(data)

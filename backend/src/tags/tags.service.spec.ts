@@ -1,5 +1,6 @@
 import { Test, TestingModule } from "@nestjs/testing"
 import { getModelToken } from "@nestjs/mongoose"
+import type { PipelineStage } from "mongoose"
 import { TagsService } from "./tags.service"
 import { Recipe } from "../recipes/entities/recipe.entity"
 
@@ -51,11 +52,13 @@ describe("TagsService", () => {
 
       await service.findAll(200)
 
-      const pipeline = mockRecipeModel.aggregate.mock.calls[0][0]
-      const limitStage = pipeline.find(
-        (s: Record<string, unknown>) => "$limit" in s
-      )
-      expect(limitStage.$limit).toBe(100)
+      const pipeline = (
+        mockRecipeModel.aggregate.mock.calls as unknown as [PipelineStage[]][]
+      )[0][0]
+      const limitStage = pipeline.find((s: PipelineStage) => "$limit" in s) as
+        | { $limit: number }
+        | undefined
+      expect(limitStage?.$limit).toBe(100)
     })
   })
 
@@ -65,11 +68,13 @@ describe("TagsService", () => {
 
       await service.findPopular()
 
-      const pipeline = mockRecipeModel.aggregate.mock.calls[0][0]
-      const limitStage = pipeline.find(
-        (s: Record<string, unknown>) => "$limit" in s
-      )
-      expect(limitStage.$limit).toBe(20)
+      const pipeline = (
+        mockRecipeModel.aggregate.mock.calls as unknown as [PipelineStage[]][]
+      )[0][0]
+      const limitStage = pipeline.find((s: PipelineStage) => "$limit" in s) as
+        | { $limit: number }
+        | undefined
+      expect(limitStage?.$limit).toBe(20)
     })
   })
 
