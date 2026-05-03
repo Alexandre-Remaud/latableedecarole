@@ -84,6 +84,32 @@ describe("recipeService.getRecipes", () => {
     const [url] = (fetch as ReturnType<typeof vi.fn>).mock.calls[0]
     expect(url).toContain("limit=10")
   })
+
+  it("should include tags in query params when provided", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(JSON.stringify(mockPaginated), { status: 200 })
+    )
+
+    await recipeService.getRecipes(undefined, undefined, 0, 20, [
+      "végétarien",
+      "rapide"
+    ])
+
+    const [url] = (fetch as ReturnType<typeof vi.fn>).mock.calls[0]
+    expect(url).toContain("tags=")
+    expect(decodeURIComponent(url)).toContain("végétarien")
+  })
+
+  it("should not include tags param when tags array is empty", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(JSON.stringify(mockPaginated), { status: 200 })
+    )
+
+    await recipeService.getRecipes(undefined, undefined, 0, 20, [])
+
+    const [url] = (fetch as ReturnType<typeof vi.fn>).mock.calls[0]
+    expect(url).not.toContain("tags=")
+  })
 })
 
 describe("recipeService.updateRecipe", () => {

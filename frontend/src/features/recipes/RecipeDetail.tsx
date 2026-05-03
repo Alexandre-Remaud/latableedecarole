@@ -37,6 +37,10 @@ export default function RecipeDetail() {
       .finally(() => setLoading(false))
   }, [id])
 
+  function handleTagClick(tag: string) {
+    navigate({ to: "/recipes", search: { tags: tag } })
+  }
+
   async function handleDelete() {
     try {
       await recipeService.deleteRecipe(id)
@@ -188,7 +192,11 @@ export default function RecipeDetail() {
 
       <p className="text-gray-500 mb-6">{recipe.description}</p>
 
-      <RecipeBadges recipe={recipe} className="mb-8" />
+      <RecipeBadges
+        recipe={recipe}
+        className="mb-8"
+        onTagClick={handleTagClick}
+      />
 
       <section className="mb-8">
         <h2 className="font-display text-lg font-semibold text-gray-800 mb-3">

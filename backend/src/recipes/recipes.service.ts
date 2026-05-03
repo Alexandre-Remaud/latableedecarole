@@ -25,7 +25,8 @@ const ALLOWED_UPDATE_FIELDS = [
   "cookTime",
   "servings",
   "difficulty",
-  "category"
+  "category",
+  "tags"
 ]
 
 @Injectable()
@@ -55,9 +56,20 @@ export class RecipesService {
     return sanitized
   }
 
+  private normalizeTags(tags: string[]): string[] {
+    return tags
+      .map((t) => t.toLowerCase().trim())
+      .filter((t) => t.length >= 2 && t.length <= 30)
+      .slice(0, 10)
+  }
+
   async create(createRecipeDto: CreateRecipeDto, userId: string) {
+    const tags = createRecipeDto.tags
+      ? this.normalizeTags(createRecipeDto.tags)
+      : []
     return this.recipeModel.create({
       ...createRecipeDto,
+      tags,
       userId: new Types.ObjectId(userId)
     })
   }
@@ -67,7 +79,8 @@ export class RecipesService {
     search?: string,
     skip = 0,
     limit = 20,
-    userId?: string
+    userId?: string,
+    tags?: string[]
   ) {
     const safeSkip = Math.max(0, skip)
     const safeLimit = Math.min(Math.max(1, limit), 100)
@@ -78,6 +91,7 @@ export class RecipesService {
       const escaped = String(search).replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
       filter.title = { $regex: escaped, $options: "i" }
     }
+    if (tags?.length) filter.tags = { $in: tags }
     const [data, total] = await Promise.all([
       this.recipeModel
         .find(filter)
@@ -122,6 +136,9 @@ export class RecipesService {
   async update(id: string, updateRecipeDto: UpdateRecipeDto) {
     this.validateObjectId(id)
     const sanitized = this.sanitizeUpdateDto(updateRecipeDto)
+    if (sanitized.tags !== undefined) {
+      sanitized.tags = this.normalizeTags(sanitized.tags)
+    }
     const recipe = await this.recipeModel.findById(id).exec()
     if (!recipe) {
       throw new NotFoundException("Recipe not found")

@@ -9,6 +9,7 @@ const baseFormData: RecipeFormData = {
   servings: 4,
   prepTime: 30,
   difficulty: "easy",
+  tags: [],
   ingredients: [
     { id: "ing-1", name: "  Pommes  ", quantity: 4, unit: "pièces" },
     { id: "ing-2", name: "Pâte brisée", quantity: 1, unit: "pcs" }

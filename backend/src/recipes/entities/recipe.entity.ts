@@ -94,6 +94,9 @@ export class Recipe {
   })
   category?: string
 
+  @Prop({ type: [String], default: [], index: true })
+  tags: string[]
+
   @Prop({ type: Types.ObjectId, ref: "User", required: true, index: true })
   userId: Types.ObjectId
 

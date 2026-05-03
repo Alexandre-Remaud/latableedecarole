@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Link } from "@tanstack/react-router"
+import { Link, useNavigate } from "@tanstack/react-router"
 import toast from "react-hot-toast"
 import { recipeService } from "@recipes/api"
 import { CATEGORIES } from "@recipes/constants/categories"
@@ -10,6 +10,7 @@ import { Route } from "@/routes/recipes/index"
 import { useAuth } from "@/features/auth/hooks"
 import FavoriteButton from "@/features/favorites/FavoriteButton"
 import ReviewSummary from "@/features/reviews/ReviewSummary"
+import { usePopularTags } from "@/features/tags/hooks"
 
 const LIMIT = 21
 
@@ -20,7 +21,10 @@ function getPageTitle(category?: string, search?: string) {
 }
 
 export default function Recipes() {
-  const { category, search } = Route.useSearch()
+  const { category, search, tags: tagsParam } = Route.useSearch()
+  const navigate = useNavigate()
+  const selectedTags = tagsParam ? tagsParam.split(",").filter(Boolean) : []
+  const { data: popularTagsData = [] } = usePopularTags()
   const [recipes, setRecipes] = useState<Recipe[]>([])
   const [total, setTotal] = useState(0)
   const [skip, setSkip] = useState(0)
@@ -36,7 +40,13 @@ export default function Recipes() {
     setSkip(0)
     setTotal(0)
     recipeService
-      .getRecipes(category, search, 0, LIMIT)
+      .getRecipes(
+        category,
+        search,
+        0,
+        LIMIT,
+        tagsParam ? tagsParam.split(",").filter(Boolean) : undefined
+      )
       .then(({ data, total }) => {
         setRecipes(data)
         setTotal(total)
@@ -44,7 +54,7 @@ export default function Recipes() {
       })
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false))
-  }, [category, search])
+  }, [category, search, tagsParam])
 
   async function handleLoadMore() {
     setLoadingMore(true)
@@ -53,7 +63,8 @@ export default function Recipes() {
         category,
         search,
         skip,
-        LIMIT
+        LIMIT,
+        selectedTags.length ? selectedTags : undefined
       )
       setRecipes((prev) => [...prev, ...data])
       setTotal(newTotal)
@@ -65,6 +76,19 @@ export default function Recipes() {
     } finally {
       setLoadingMore(false)
     }
+  }
+
+  function handleTagClick(tag: string) {
+    const next = selectedTags.includes(tag)
+      ? selectedTags.filter((t) => t !== tag)
+      : [...selectedTags, tag]
+    navigate({
+      to: "/recipes",
+      search: (prev) => ({
+        ...prev,
+        tags: next.length ? next.join(",") : undefined
+      })
+    })
   }
 
   async function handleDelete() {
@@ -131,6 +155,25 @@ export default function Recipes() {
         </h1>
       </div>
 
+      {popularTagsData.length > 0 && (
+        <div className="flex flex-wrap gap-2 mb-5">
+          {popularTagsData.map(({ name }) => (
+            <button
+              key={name}
+              type="button"
+              onClick={() => handleTagClick(name)}
+              className={`text-sm px-3 py-1 rounded-full border transition-colors ${
+                selectedTags.includes(name)
+                  ? "bg-warm-600 text-white border-warm-600"
+                  : "bg-white text-gray-600 border-gray-200 hover:border-warm-400"
+              }`}
+            >
+              {name}
+            </button>
+          ))}
+        </div>
+      )}
+
       <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {recipes.map((recipe) => (
           <li
@@ -179,7 +222,7 @@ export default function Recipes() {
                   {recipe.description}
                 </p>
                 <div className="flex items-center justify-between gap-2">
-                  <RecipeBadges recipe={recipe} />
+                  <RecipeBadges recipe={recipe} onTagClick={handleTagClick} />
                   {(recipe.averageRating ?? 0) > 0 && (
                     <ReviewSummary
                       averageRating={recipe.averageRating ?? 0}

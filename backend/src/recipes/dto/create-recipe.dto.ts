@@ -10,7 +10,9 @@ import {
   Min,
   Max,
   ValidateNested,
-  ArrayMinSize
+  ArrayMinSize,
+  ArrayMaxSize,
+  MinLength
 } from "class-validator"
 import { Type } from "class-transformer"
 
@@ -143,4 +145,12 @@ export class CreateRecipeDto {
     | "snack"
     | "beverage"
     | "sauce"
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  @ArrayMaxSize(10)
+  @MinLength(2, { each: true })
+  @MaxLength(30, { each: true })
+  tags?: string[]
 }

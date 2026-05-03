@@ -51,7 +51,8 @@ export const recipeFormSchema = z.object({
   ingredients: z
     .array(ingredientSchema)
     .min(1, "Au moins un ingrédient est requis"),
-  steps: z.array(stepSchema).min(1, "Au moins une étape est requise")
+  steps: z.array(stepSchema).min(1, "Au moins une étape est requise"),
+  tags: z.array(z.string().min(2).max(30)).max(10).optional().default([])
 })
 
-export type RecipeFormData = z.infer<typeof recipeFormSchema>
+export type RecipeFormData = z.input<typeof recipeFormSchema>

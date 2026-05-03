@@ -32,6 +32,7 @@ export type Recipe = {
   isFavorited?: boolean
   averageRating?: number
   ratingsCount?: number
+  tags?: string[]
 }
 
 export type PaginatedRecipes = {
@@ -63,4 +64,5 @@ export type CreateRecipeContract = {
   servings?: number
   difficulty?: "easy" | "medium" | "hard"
   category?: string
+  tags?: string[]
 }

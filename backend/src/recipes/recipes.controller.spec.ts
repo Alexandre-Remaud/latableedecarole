@@ -85,6 +85,7 @@ describe("RecipesController", () => {
         undefined,
         0,
         20,
+        undefined,
         undefined
       )
       expect(result).toEqual(paginatedResult)
@@ -100,6 +101,7 @@ describe("RecipesController", () => {
         undefined,
         0,
         20,
+        undefined,
         undefined
       )
     })
@@ -114,6 +116,7 @@ describe("RecipesController", () => {
         "tarte",
         0,
         20,
+        undefined,
         undefined
       )
     })
@@ -128,6 +131,7 @@ describe("RecipesController", () => {
         undefined,
         20,
         10,
+        undefined,
         undefined
       )
     })
@@ -142,6 +146,7 @@ describe("RecipesController", () => {
         undefined,
         40,
         20,
+        undefined,
         undefined
       )
     })

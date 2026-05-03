@@ -1,10 +1,12 @@
-import { useController } from "react-hook-form"
+import { useController, Controller } from "react-hook-form"
 import IngredientField from "./IngredientField"
 import StepField from "./StepField"
 import { CATEGORIES } from "@recipes/constants/categories"
 import { useRecipeForm } from "@recipes/hooks/useForm"
 import { ImageUpload } from "@/features/upload"
 import type { RecipeFormData } from "@recipes/schema"
+import TagInput from "@/features/tags/TagInput"
+import { useTags } from "@/features/tags/hooks"
 
 interface FormProps {
   recipeId?: string
@@ -31,6 +33,9 @@ export default function Form({ recipeId }: FormProps) {
     control,
     name: "image"
   })
+
+  const { data: allTags = [] } = useTags()
+  const tagSuggestions = allTags.map((t) => t.name)
 
   if (isLoading) {
     return (
@@ -170,6 +175,28 @@ export default function Form({ recipeId }: FormProps) {
                   <p className="error-message">{errors.category.message}</p>
                 )}
               </div>
+            </div>
+
+            <div>
+              <label className="label-field">Tags</label>
+              <Controller
+                control={control}
+                name="tags"
+                render={({ field }) => (
+                  <TagInput
+                    value={field.value ?? []}
+                    onChange={field.onChange}
+                    suggestions={tagSuggestions}
+                  />
+                )}
+              />
+              <p className="text-xs text-gray-400 mt-1">
+                Maximum 10 tags, 2–30 caractères chacun. Entrée ou virgule pour
+                valider.
+              </p>
+              {errors.tags && (
+                <p className="error-message">{errors.tags.message}</p>
+              )}
             </div>
           </div>
         </section>

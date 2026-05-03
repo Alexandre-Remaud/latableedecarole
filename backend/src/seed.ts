@@ -94,6 +94,7 @@ function buildRecipes(userIds: Types.ObjectId[]) {
         { name: "Pâte brisée", quantity: 1, unit: "pièce(s)" },
         { name: "Noix de muscade", quantity: 1, unit: "pincée" }
       ],
+      tags: ["classique", "fromage", "tarte salée", "lardons"],
       steps: [
         {
           order: 1,
@@ -139,6 +140,7 @@ function buildRecipes(userIds: Types.ObjectId[]) {
         { name: "Pâte feuilletée", quantity: 1, unit: "pièce(s)" },
         { name: "Cannelle moulue", quantity: 1, unit: "cc" }
       ],
+      tags: ["classique", "pomme", "caramel", "tarte"],
       steps: [
         {
           order: 1,
@@ -187,6 +189,7 @@ function buildRecipes(userIds: Types.ObjectId[]) {
         { name: "Sucre roux", quantity: 4, unit: "cs" },
         { name: "Gousse de vanille", quantity: 1, unit: "pièce(s)" }
       ],
+      tags: ["classique", "vanille", "crème"],
       steps: [
         {
           order: 1,
@@ -242,6 +245,7 @@ function buildRecipes(userIds: Types.ObjectId[]) {
         { name: "Pain de campagne", quantity: 4, unit: "pièce(s)" },
         { name: "Gruyère râpé", quantity: 80, unit: "g" }
       ],
+      tags: ["hiver", "fromage", "réconfortant", "soupe"],
       steps: [
         {
           order: 1,
@@ -291,6 +295,7 @@ function buildRecipes(userIds: Types.ObjectId[]) {
         { name: "Sel fin", quantity: 1, unit: "pincée" },
         { name: "Poivre noir moulu", quantity: 1, unit: "pincée" }
       ],
+      tags: ["rapide", "végétarien", "sauce", "sans cuisson"],
       steps: [
         {
           order: 1,
@@ -340,6 +345,7 @@ function buildRecipes(userIds: Types.ObjectId[]) {
         { name: "Herbes de Provence", quantity: 1, unit: "cs" },
         { name: "Sel fin", quantity: 1, unit: "pincée" }
       ],
+      tags: ["végétarien", "provençal", "été", "légumes"],
       steps: [
         {
           order: 1,
@@ -386,6 +392,7 @@ function buildRecipes(userIds: Types.ObjectId[]) {
         { name: "Huile d'olive", quantity: 5, unit: "cs" },
         { name: "Jus de citron", quantity: 1, unit: "cs" }
       ],
+      tags: ["végétarien", "provençal", "apéro", "sans cuisson"],
       steps: [
         {
           order: 1,
@@ -436,6 +443,7 @@ function buildRecipes(userIds: Types.ObjectId[]) {
         { name: "Fenouil", quantity: 1, unit: "pièce(s)" },
         { name: "Pastis", quantity: 5, unit: "cl" }
       ],
+      tags: ["poisson", "provençal", "fruits de mer"],
       steps: [
         {
           order: 1,
@@ -493,6 +501,7 @@ function buildRecipes(userIds: Types.ObjectId[]) {
         { name: "Beurre", quantity: 20, unit: "g" },
         { name: "Noix de muscade", quantity: 1, unit: "pincée" }
       ],
+      tags: ["réconfortant", "fromage", "hiver", "gratin"],
       steps: [
         {
           order: 1,
@@ -549,6 +558,7 @@ function buildRecipes(userIds: Types.ObjectId[]) {
         { name: "Eau gazeuse", quantity: 500, unit: "ml" },
         { name: "Feuilles de menthe fraîche", quantity: 20, unit: "pièce(s)" }
       ],
+      tags: ["végétarien", "été", "boisson", "sans cuisson"],
       steps: [
         {
           order: 1,
@@ -604,6 +614,7 @@ function buildRecipes(userIds: Types.ObjectId[]) {
         { name: "Beurre", quantity: 40, unit: "g" },
         { name: "Farine T45", quantity: 2, unit: "cs" }
       ],
+      tags: ["classique", "hiver", "mijoté", "bœuf"],
       steps: [
         {
           order: 1,
@@ -661,6 +672,7 @@ function buildRecipes(userIds: Types.ObjectId[]) {
         { name: "Cannelle moulue", quantity: 1, unit: "cc" },
         { name: "Sucre glace", quantity: 2, unit: "cs" }
       ],
+      tags: ["classique", "rapide", "sucré", "brioche"],
       steps: [
         {
           order: 1,
@@ -715,6 +727,7 @@ function buildRecipes(userIds: Types.ObjectId[]) {
         { name: "Branches de thym", quantity: 3, unit: "pièce(s)" },
         { name: "Beurre", quantity: 30, unit: "g" }
       ],
+      tags: ["bière", "mijoté", "bœuf", "hiver"],
       steps: [
         {
           order: 1,
@@ -766,6 +779,7 @@ function buildRecipes(userIds: Types.ObjectId[]) {
         { name: "Filets d'anchois", quantity: 8, unit: "pièce(s)" },
         { name: "Huile d'olive", quantity: 4, unit: "cs" }
       ],
+      tags: ["été", "provençal", "thon", "sans cuisson"],
       steps: [
         {
           order: 1,
@@ -812,6 +826,7 @@ function buildRecipes(userIds: Types.ObjectId[]) {
         { name: "Poivre blanc", quantity: 1, unit: "pincée" },
         { name: "Noix de muscade râpée", quantity: 1, unit: "pincée" }
       ],
+      tags: ["classique", "rapide", "sauce", "végétarien"],
       steps: [
         {
           order: 1,
@@ -865,6 +880,7 @@ function buildRecipes(userIds: Types.ObjectId[]) {
         { name: "Jus de citron", quantity: 2, unit: "cs" },
         { name: "Graines de sésame", quantity: 1, unit: "cs" }
       ],
+      tags: ["végétarien", "healthy", "été", "coloré"],
       steps: [
         {
           order: 1,
@@ -913,6 +929,7 @@ function buildRecipes(userIds: Types.ObjectId[]) {
         { name: "Gingembre frais râpé", quantity: 5, unit: "g" },
         { name: "Jus de citron", quantity: 1, unit: "cs" }
       ],
+      tags: ["vegan", "healthy", "rapide", "sans cuisson"],
       steps: [
         {
           order: 1,
@@ -960,6 +977,7 @@ function buildRecipes(userIds: Types.ObjectId[]) {
         { name: "Sel fin", quantity: 1, unit: "pincée" },
         { name: "Paprika fumé", quantity: 1, unit: "pincée" }
       ],
+      tags: ["vegan", "apéro", "sans cuisson", "healthy"],
       steps: [
         {
           order: 1,
@@ -1010,6 +1028,7 @@ function buildRecipes(userIds: Types.ObjectId[]) {
         { name: "Huile d'olive", quantity: 4, unit: "cs" },
         { name: "Sel fin", quantity: 1, unit: "pincée" }
       ],
+      tags: ["vegan", "été", "sans cuisson", "healthy"],
       steps: [
         {
           order: 1,
@@ -1057,6 +1076,7 @@ function buildRecipes(userIds: Types.ObjectId[]) {
         { name: "Huile de coco fondue", quantity: 60, unit: "ml" },
         { name: "Myrtilles fraîches", quantity: 200, unit: "g" }
       ],
+      tags: ["vegan", "sans cuisson", "myrtille", "sucré"],
       steps: [
         {
           order: 1,
@@ -1106,6 +1126,7 @@ function buildRecipes(userIds: Types.ObjectId[]) {
         { name: "Gingembre frais râpé", quantity: 10, unit: "g" },
         { name: "Huile d'olive", quantity: 2, unit: "cs" }
       ],
+      tags: ["vegan", "épicé", "hiver", "healthy"],
       steps: [
         {
           order: 1,
@@ -1158,6 +1179,7 @@ function buildRecipes(userIds: Types.ObjectId[]) {
         { name: "Zeste de citron", quantity: 1, unit: "pièce(s)" },
         { name: "Extrait de vanille", quantity: 1, unit: "cc" }
       ],
+      tags: ["classique", "citron", "goûter", "sucré"],
       steps: [
         {
           order: 1,
@@ -1207,6 +1229,7 @@ function buildRecipes(userIds: Types.ObjectId[]) {
         { name: "Parmesan râpé", quantity: 30, unit: "g" },
         { name: "Sel fin", quantity: 1, unit: "pincée" }
       ],
+      tags: ["végétarien", "provençal", "sans cuisson", "herbes"],
       steps: [
         {
           order: 1,
@@ -1255,6 +1278,7 @@ function buildRecipes(userIds: Types.ObjectId[]) {
         { name: "Navet", quantity: 1, unit: "pièce(s)" },
         { name: "Bouquet garni", quantity: 1, unit: "pièce(s)" }
       ],
+      tags: ["hiver", "mijoté", "réconfortant", "porc"],
       steps: [
         {
           order: 1,
@@ -1314,6 +1338,7 @@ function buildRecipes(userIds: Types.ObjectId[]) {
         { name: "Gingembre frais râpé", quantity: 10, unit: "g" },
         { name: "Huile de coco", quantity: 1, unit: "cs" }
       ],
+      tags: ["vegan", "épicé", "healthy", "curry"],
       steps: [
         {
           order: 1,

@@ -124,6 +124,20 @@ describe("RecipesService", () => {
       expect(callArgs.userId).toBeDefined()
       expect(result).toEqual(createdRecipe)
     })
+
+    it("should normalize tags to lowercase and trimmed", async () => {
+      const dto: CreateRecipeDto = {
+        ...mockRecipe,
+        tags: ["  Végétarien ", "RAPIDE"]
+      }
+      mockRecipeModel.create.mockResolvedValue({ ...dto, _id: VALID_ID })
+
+      await service.create(dto, VALID_ID)
+
+      expect(mockRecipeModel.create).toHaveBeenCalledWith(
+        expect.objectContaining({ tags: ["végétarien", "rapide"] })
+      )
+    })
   })
 
   describe("findAll", () => {
@@ -184,6 +198,31 @@ describe("RecipesService", () => {
       const result = await service.findAll("beverage")
 
       expect(result).toEqual({ data: [], total: 0 })
+    })
+
+    it("should filter by tags using $in when tags provided", async () => {
+      mockRecipeModel.find.mockReturnValue(mockFind([mockRecipe]))
+      mockRecipeModel.countDocuments.mockResolvedValue(1)
+
+      await service.findAll(undefined, undefined, 0, 20, undefined, [
+        "végétarien"
+      ])
+
+      expect(mockRecipeModel.find).toHaveBeenCalledWith({
+        tags: { $in: ["végétarien"] }
+      })
+    })
+
+    it("should combine tags filter with category filter", async () => {
+      mockRecipeModel.find.mockReturnValue(mockFind([mockRecipe]))
+      mockRecipeModel.countDocuments.mockResolvedValue(1)
+
+      await service.findAll("dessert", undefined, 0, 20, undefined, ["rapide"])
+
+      expect(mockRecipeModel.find).toHaveBeenCalledWith({
+        category: "dessert",
+        tags: { $in: ["rapide"] }
+      })
     })
   })
 
